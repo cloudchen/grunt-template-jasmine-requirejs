@@ -3,6 +3,13 @@
 <head>
   <meta charset="utf-8">
   <title>Jasmine Spec Runner</title>
+
+  <% with (scripts) { %>
+  <% [].concat(jasmine, vendor, helpers).forEach(function(script){ %>
+  <script src="<%= script %>"></script>
+  <% }) %>
+  <% }; %>
+
   <script src="<%= temp %>/require.js"></script>
   <script>
     <% if (options.requireConfig) { %>
@@ -12,11 +19,6 @@
   <% css.forEach(function(style){ %>
   <link rel="stylesheet" type="text/css" href="<%= style %>">
   <% }) %>
-  <% with (scripts) { %>
-  <% [].concat(jasmine, vendor, helpers).forEach(function(script){ %>
-  <script src="<%= script %>"></script>
-  <% }) %>
-  <% }; %>
   <script>
     require([
       <% scripts.src.forEach(function(script, i){ %>
