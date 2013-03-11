@@ -10,7 +10,7 @@
   <% }) %>
   <% }; %>
 
-  <script src="<%= temp %>/require.js"></script>
+  <script <% if (options.configFile) { %>data-main="<%= options.configFile %>" <% } %>src="<%= temp %>/require.js"></script>
   <script>
     <% if (options.requireConfig) { %>
       require.config(<%= JSON.stringify(options.requireConfig) %>);
