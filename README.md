@@ -32,7 +32,7 @@ grunt.initConfig({
     test : {
       port : 8000
     }
-  }
+  },
   jasmine: {
     taskName: {
       src: 'src/**/*.js',
@@ -49,7 +49,7 @@ grunt.initConfig({
       }
     }
   }
-}
+});
 ```
 
 *Note* the usage of the 'connect' task configuration. You will need to use a task like
