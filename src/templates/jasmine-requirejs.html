@@ -29,7 +29,7 @@
     ],
     function(){
       require(['<%= [].concat(scripts.specs,scripts.reporters).join("','") %>'], function(){
-        require(['/<%= temp %>/domReady.js'], function() {
+        require(['./<%= temp %>/domReady.js'], function() {
           require(['<%= scripts.start.join("','") %>'], function(){
           // good to go! Our tests should already be running.
           });  
