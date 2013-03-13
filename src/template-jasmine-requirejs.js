@@ -42,7 +42,13 @@ exports.process = function(grunt, task, context) {
     });
   }
 
-  task.copyTempFile(requirejs[version],'require.js');
+  var userDefinedRequirejs = context.options.pathToRequireJS;
+  var pathToRequirejs = requirejs[version];
+  if(userDefinedRequirejs) {
+    pathToRequirejs = userDefinedRequirejs;
+  }
+
+  task.copyTempFile(pathToRequirejs,'require.js');
   task.copyTempFile(domready,'domReady.js');
 
   var source = grunt.file.read(template);
