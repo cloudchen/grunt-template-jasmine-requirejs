@@ -13,6 +13,9 @@
   <% if (options.configFile) { %>
     <script src="<%= options.configFile %>"></script>
   <% } %>
+  
+    <script src="<%= temp %>/require.js"></script>
+  
   <% if (options.requireConfig) { %>
     <script>
       var require = (function(){
@@ -30,7 +33,6 @@
       })();    
     </script>
   <% } %>
-  <script src="<%= temp %>/require.js"></script>
   <% css.forEach(function(style){ %>
   <link rel="stylesheet" type="text/css" href="<%= style %>">
   <% }) %>
