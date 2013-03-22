@@ -10,17 +10,16 @@
   <% }) %>
   <% }; %>
 
-  <script src="<%= temp %>/require.js"></script>
-  <script>
-    <% if (options.requireConfig) { %>
-      require.config(<%= JSON.stringify(options.requireConfig) %>);
-    <% } %>
-  </script>
+  <script <% if (options.configFile) { %>data-main="<%= options.configFile %>" <% } %>src="<%= temp %>/require.js"></script>
   <% css.forEach(function(style){ %>
   <link rel="stylesheet" type="text/css" href="<%= style %>">
   <% }) %>
   <script>
-    require([
+    require(
+      <% if (options.requireConfig) { %>
+      <%= JSON.stringify(options.requireConfig) %>,
+      <% } %>
+      [
       <% scripts.src.forEach(function(script, i){ %>
       <% if (options.requireConfig && options.requireConfig.baseUrl) script = script.replace(new RegExp('^' + options.requireConfig.baseUrl),""); %>
       <% if (options.loaderPlugin) script = options.loaderPlugin + '!' + script %>
@@ -28,11 +27,17 @@
         <% }) %>
     ],
     function(){
-      require(['<%= [].concat(scripts.specs,scripts.reporters).join("','") %>'], function(){
-        require(['<%= scripts.start.join("','") %>'], function(){
-          // good to go! Our tests should already be running.
-        })
-      })
+      <% if (options.requireConfig) { %>
+      require(<%= JSON.stringify(options.requireConfig) %>, function() {
+      <% } %>
+        require(['<%= [].concat(scripts.specs,scripts.reporters).join("','") %>'], function(){
+          require(['<%= scripts.start.join("','") %>'], function(){
+            // good to go! Our tests should already be running.
+          });
+        });
+      <% if (options.requireConfig) { %>
+      });
+      <% } %>
     }
     )
   </script>

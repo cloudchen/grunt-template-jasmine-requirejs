@@ -42,6 +42,7 @@ grunt.initConfig({
         host: 'http://127.0.0.1:8000/',
         template: require('grunt-template-jasmine-requirejs'),
         templateOptions: {
+          configFile: 'src/config',
           requireConfig: {
             baseUrl: 'src/'
           }
