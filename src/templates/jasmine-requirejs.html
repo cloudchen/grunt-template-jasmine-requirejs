@@ -12,6 +12,9 @@
 
   <script src="<%= temp %>/require.js"></script>
   <script>
+    <% if (options.mainRequireConfig) { %>
+      require.config(<%= options.mainRequireConfig %>);
+    <% } %>
     <% if (options.requireConfig) { %>
       require.config(<%= JSON.stringify(options.requireConfig) %>);
     <% } %>

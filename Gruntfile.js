@@ -53,8 +53,14 @@ module.exports = function(grunt) {
           host: 'http://127.0.0.1:<%= connect.test.port %>/',
           template : require('./'),
           templateOptions: {
+            mainRequireConfigFile: 'test/fixtures/requirejs/src/main.js',
             requireConfig : {
-              baseUrl: './test/fixtures/requirejs/src/'
+              baseUrl: './test/fixtures/requirejs/src/',
+              config: {
+                sum: {
+                  description: "Sum module (overridden)"
+                }
+              }
             }
           }
         }
