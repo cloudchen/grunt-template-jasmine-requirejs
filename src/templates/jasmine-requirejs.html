@@ -10,6 +10,28 @@
   <% }) %>
   <% }; %>
 
+
+  <% var hasLaunched = false; %>
+  <script>
+      function launchSpec() {
+        require([
+          <% scripts.src.forEach(function(script, i){ %>
+          <% if (options.requireConfig && options.requireConfig.baseUrl) script = script.replace(new RegExp('^' + options.requireConfig.baseUrl),""); %>
+          <% if (options.loaderPlugin) script = options.loaderPlugin + '!' + script %>
+            '<%= script.replace(/\.js$/,"") %>' <%= i < scripts.src.length-1 ? ',' : '' %>
+            <% }) %>
+        ],
+        function(){
+          require(['<%= [].concat(scripts.specs,scripts.reporters).join("','") %>'], function(){
+            require(['<%= scripts.start.join("','") %>'], function(){
+              // good to go! Our tests should already be running.
+            })
+          })
+        }
+        )
+      }
+  </script>
+
   <script>
     <% if (options.requireConfig) { %>
       var require = (function(){
@@ -18,7 +40,16 @@
             for (var item in options.requireConfig) {
                 if (typeof options.requireConfig[item] == 'function') {
             %>
-                config['<%= item %>'] = <%= options.requireConfig[item].toString() %>;
+                config['<%= item %>'] = <%= options.requireConfig[item].toString().replace(/^function\s+\(([^\)]*)\)\s*\{((?:.|\n)*)}/m, 'function($1) {$2') %>
+            <%
+                    if (item == 'callback') {
+                        hasLaunched = true;
+            %>
+                        launchSpec();
+            <%
+                    }
+            %>
+                }
             <%
                 }
             }
@@ -31,23 +62,15 @@
   <% css.forEach(function(style){ %>
   <link rel="stylesheet" type="text/css" href="<%= style %>">
   <% }) %>
+  <%
+  if (!hasLaunched) {
+  %>
   <script>
-    require([
-      <% scripts.src.forEach(function(script, i){ %>
-      <% if (options.requireConfig && options.requireConfig.baseUrl) script = script.replace(new RegExp('^' + options.requireConfig.baseUrl),""); %>
-      <% if (options.loaderPlugin) script = options.loaderPlugin + '!' + script %>
-        '<%= script.replace(/\.js$/,"") %>' <%= i < scripts.src.length-1 ? ',' : '' %>
-        <% }) %>
-    ],
-    function(){
-      require(['<%= [].concat(scripts.specs,scripts.reporters).join("','") %>'], function(){
-        require(['<%= scripts.start.join("','") %>'], function(){
-          // good to go! Our tests should already be running.
-        })
-      })
-    }
-    )
+      launchSpec();
   </script>
+  <%
+  }
+  %>
 </head>
 <body>
 </body>
