@@ -1,4 +1,3 @@
-
 "use strict";
 
 var template = __dirname + '/templates/jasmine-requirejs.html',
@@ -51,6 +50,10 @@ exports.process = function(grunt, task, context) {
   task.copyTempFile(pathToRequirejs,'require.js');
   task.copyTempFile(domready,'domReady.js');
 
+
+  require('./istanbul-coverage-helper').init(grunt, task, context);
+
+   
   var source = grunt.file.read(template);
   return grunt.util._.template(source, context);
 };
