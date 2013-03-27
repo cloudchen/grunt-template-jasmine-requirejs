@@ -25,7 +25,7 @@ module.exports = function(grunt) {
         src: 'Gruntfile.js'
       },
       lib_test: {
-        src: ['src/**/*.js']
+        src: ['src/**/*.js', '!src/lib/**/*.js']
       }
     },
     watch: {
@@ -40,8 +40,11 @@ module.exports = function(grunt) {
     },
     connect: {
       test: {
-        port: 8000,
-        base: '.'
+        options: {
+          port: 9000,
+          host: 'localhost',
+          base: '.'
+        }
       }
     },
     jasmine: {
@@ -50,7 +53,7 @@ module.exports = function(grunt) {
         options: {
           specs: 'test/fixtures/requirejs/spec/*Spec.js',
           helpers: 'test/fixtures/requirejs/spec/*Helper.js',
-          host: 'http://127.0.0.1:<%= connect.test.port %>/',
+          host: 'http://localhost:<%= connect.test.options.port %>/',
           template : require('./'),
           templateOptions: {
             mainRequireConfigFile: 'test/fixtures/requirejs/src/main.js',

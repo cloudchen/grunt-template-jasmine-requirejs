@@ -6,52 +6,65 @@ var template = __dirname + '/templates/jasmine-requirejs.html',
       '2.1.1' : __dirname + '/../vendor/require-2.1.1.js',
       '2.1.2' : __dirname + '/../vendor/require-2.1.1.js'
     },
-    path = require('path');
+    path = require('path'),
+    parse = require('./lib/parse'),
+    mixConfig = require('./lib/mixConfig');
+
+function filterGlobPatterns(scripts) {
+  Object.keys(scripts).forEach(function (group) {
+    if (Array.isArray(scripts[group])) {
+      scripts[group] = scripts[group].filter(function(script) {
+        return script.indexOf('*') === -1;
+      });
+    } else {
+      scripts[group] = [];
+    }
+  });
+}
+
+function toQuotedString(array) {
+  return "'" + array.join("','") + "'";
+}
 
 exports.process = function(grunt, task, context) {
 
-  function extractRequireConfig(file) {
-    var content = grunt.file.read(file);
-    var contentMatch = /require\.config\(([\s\S]*?)\)/.exec(content); // TODO copy implementation from r.js
-    return contentMatch ? contentMatch[1] : null;
-  }
-
-  var version = context.options.version;
+  var version = context.options.version,
+      requireConfig = {};
 
   // find the latest version if none given
   if (!version) {
     version = Object.keys(requirejs).sort().pop();
   }
 
-  var src = context.scripts.src;
-  var baseUrl = context.options.requireConfig && context.options.requireConfig.baseUrl;
-  var mainConfigFile = context.options.mainRequireConfigFile;
+  // Remove glob patterns from scripts (see https://github.com/gruntjs/grunt-contrib-jasmine/issues/42)
+  filterGlobPatterns(context.scripts);
 
-  if (!baseUrl) {
-    baseUrl = '/';
+  // Extract config from main require config file
+  if (context.options.mainRequireConfigFile) {
+    // Remove mainConfigFile from src files
+    context.scripts.src = grunt.util._.reject(context.scripts.src, function (script) {
+      return path.normalize(script) === path.normalize(context.options.mainRequireConfigFile);
+    });
+
+    requireConfig = parse.findConfig(grunt.file.read(context.options.mainRequireConfigFile)).config;
   }
 
-  if (mainConfigFile) {
-    // Remove configFile src files
-    var srcIndex = -1;
-    src.forEach(function(file, index) {
-      if (path.normalize(file) === mainConfigFile) {
-        srcIndex = index;
-      }
-    });
-    if (srcIndex !== -1) {
-      src.splice(srcIndex, 1);
-    }
+  // requireConfig overrides main require config
+  if (context.options.requireConfig) {
+    mixConfig(requireConfig, context.options.requireConfig);
+  }
 
-    context.options.mainRequireConfig = extractRequireConfig(mainConfigFile);
+  // Ensure baseUrl
+  if (!requireConfig.baseUrl) {
+    requireConfig.baseUrl = '/';
   }
 
   // Remove baseUrl and .js from src files
-  src.forEach(function(script, i){
-    if (baseUrl) {
-      script = script.replace(new RegExp('^' + baseUrl),"");
+  context.scripts.src = context.scripts.src.map(function(script) {
+    if (script.indexOf(requireConfig.baseUrl) === 0) {
+      script = script.substr(requireConfig.baseUrl.length);
     }
-    src[i] = script.replace(/\.js$/,"");
+    return script.replace(/\.js$/, '');
   });
 
   // Prepend loaderPlugins to the appropriate files
@@ -65,9 +78,22 @@ exports.process = function(grunt, task, context) {
     });
   }
 
-  task.copyTempFile(requirejs[version],'require.js');
+  task.copyTempFile(requirejs[version], 'require.js');
 
-  var source = grunt.file.read(template);
-  return grunt.util._.template(source, context);
+  return grunt.util._.template(grunt.file.read(template), {
+    css: context.css,
+    scripts: [].concat(
+        context.scripts.jasmine,
+        context.scripts.vendor,
+        context.scripts.helpers,
+        [context.temp + '/require.js']
+    ),
+    require: {
+      config: JSON.stringify(requireConfig),
+      sources: toQuotedString(context.scripts.src),
+      specsAndReporters: toQuotedString([].concat(context.scripts.specs, context.scripts.reporters)),
+      start: toQuotedString(context.scripts.start)
+    }
+  });
 };
 
