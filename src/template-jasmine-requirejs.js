@@ -4,7 +4,7 @@
 var template = __dirname + '/templates/jasmine-requirejs.html',
     requirejs  = {
       '2.1.1' : __dirname + '/../vendor/require-2.1.1.js',
-      '2.1.2' : __dirname + '/../vendor/require-2.1.1.js'
+      '2.1.2' : __dirname + '/../vendor/require-2.1.2.js'
     },
     path = require('path'),
     parse = require('./lib/parse'),
