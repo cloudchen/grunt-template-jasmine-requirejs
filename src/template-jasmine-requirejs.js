@@ -2,6 +2,7 @@
 "use strict";
 
 var template = __dirname + '/templates/jasmine-requirejs.html',
+    domready = __dirname + '/../vendor/domReady.js',
     requirejs  = {
       '2.1.1' : __dirname + '/../vendor/require-2.1.1.js',
       '2.1.2' : __dirname + '/../vendor/require-2.1.2.js'
@@ -42,6 +43,7 @@ exports.process = function(grunt, task, context) {
   }
 
   task.copyTempFile(requirejs[version],'require.js');
+  task.copyTempFile(domready,'domReady.js');
 
   var source = grunt.file.read(template);
   return grunt.util._.template(source, context);
