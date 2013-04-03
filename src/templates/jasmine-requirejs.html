@@ -40,7 +40,7 @@
             for (var item in options.requireConfig) {
                 if (typeof options.requireConfig[item] == 'function') {
             %>
-                config['<%= item %>'] = <%= options.requireConfig[item].toString().replace(/^function\s+\(([^\)]*)\)\s*\{((?:.|\n)*)}/m, 'function($1) {$2') %>
+                config['<%= item %>'] = <%= options.requireConfig[item].toString().replace(/^function\s+\w*\(([^\)]*)\)\s*\{((?:.|\n)*)}/m, 'function($1) {$2') %>
             <%
                     if (item == 'callback') {
                         hasLaunched = true;
