@@ -1,7 +1,7 @@
-
 "use strict";
 
 var template = __dirname + '/templates/jasmine-requirejs.html',
+    domready = __dirname + '/../vendor/domReady.js',
     requirejs  = {
       '2.1.1' : __dirname + '/../vendor/require-2.1.1.js',
       '2.1.2' : __dirname + '/../vendor/require-2.1.2.js'
@@ -41,8 +41,19 @@ exports.process = function(grunt, task, context) {
     });
   }
 
-  task.copyTempFile(requirejs[version],'require.js');
+  var userDefinedRequirejs = context.options.pathToRequireJS;
+  var pathToRequirejs = requirejs[version];
+  if(userDefinedRequirejs) {
+    pathToRequirejs = userDefinedRequirejs;
+  }
 
+  task.copyTempFile(pathToRequirejs,'require.js');
+  task.copyTempFile(domready,'domReady.js');
+
+
+  require('./istanbul-coverage-helper').init(grunt, task, context);
+
+   
   var source = grunt.file.read(template);
   return grunt.util._.template(source, context);
 };
