@@ -35,25 +35,59 @@
   <script>
     <% if (options.requireConfig) { %>
       var require = (function(){
-            var config = <%= JSON.stringify(options.requireConfig) %>;
+            var config = {};
             <%
-            for (var item in options.requireConfig) {
-                if (typeof options.requireConfig[item] == 'function') {
-            %>
-                config['<%= item %>'] = <%= options.requireConfig[item].toString().replace(/^function\s+\w*\(([^\)]*)\)\s*\{((?:.|\n)*)}/m, 'function($1) {$2') %>
-            <%
-                    if (item == 'callback') {
-                        hasLaunched = true;
-            %>
-                        launchSpec();
-            <%
+            function stringify(obj, variable) {
+                var objLiteral = '';
+                if (typeof obj == 'object') {
+                    objLiteral += variable + "=";
+                    if (obj.constructor == Array) {
+                        objLiteral += "[];\n";
+                    } else {
+                        objLiteral += "{};\n";
                     }
+
+                    for (var item in obj) {
+                        if (typeof obj[item] == 'object') {
+                            objLiteral += stringify(obj[item], variable + "['" + item + "']");
+                        } else if (typeof obj[item] == 'function') {
+                            objLiteral += variable + "['" + item + "'] = " + obj[item].toString() + ";\n"
+                        } else if (typeof obj[item] == 'string') {
+                            objLiteral += variable + "['" + item + "'] = '" + obj[item].toString() + "';\n"
+                        } else {
+                            objLiteral += variable + "['" + item + "'] = " + obj[item].toString() + ";\n";
+                        }
+                    }
+                } else if(typeof obj == "string") {
+                    objLiteral += variable + "='" + obj.toString() + "';\n";
+                } else {
+                    objLiteral += variable + "=" + obj.toString() + ";\n";
+                }
+                return objLiteral;
+            }
+        
+            for (var item in options.requireConfig) {
+                if (item == 'callback') {
+            %>
+                config['callback'] = <%= options.requireConfig['callback'].toString().replace(/^function\s+\w*\(([^\)]*)\)\s*\{((?:.|\n)*)}/m, 'function($1) {$2') %>
+            <%
+                if (item == 'callback') {
+                    hasLaunched = true;
+            %>
+                    launchSpec();
+            <%
+                }
             %>
                 }
+            <%
+                } else {
+            %>
+                <%= stringify(options.requireConfig[item], 'config["' + item + '"]') %>
             <%
                 }
             }
             %>
+
             return config;
       })();
     <% } %>
