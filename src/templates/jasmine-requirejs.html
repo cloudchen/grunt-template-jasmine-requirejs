@@ -4,6 +4,10 @@
   <meta charset="utf-8">
   <title>Jasmine Spec Runner</title>
 
+  <% if (options.less){ options.less.forEach(function(style){ %>
+  <link rel="stylesheet/less" type="text/css" href="<%= style %>">
+  <% });} %>
+
   <% with (scripts) { %>
   <% [].concat(jasmine, vendor, helpers).forEach(function(script){ %>
   <script src="<%= script %>"></script>
