@@ -3,43 +3,63 @@
 <head>
   <meta charset="utf-8">
   <title>Jasmine Spec Runner</title>
-
-  <% with (scripts) { %>
-  <% [].concat(jasmine, vendor, helpers).forEach(function(script){ %>
-  <script src="<%= script %>"></script>
-  <% }) %>
-  <% }; %>
-
-  <script src="<%= temp %>/require.js"></script>
-  <% if (options.configFile) { %>
-    <script src="<%= options.configFile %>"></script>
-  <% } %>
-  <% if (options.requireConfig) { %>
-    <script>
-      require.config(<%= JSON.stringify(options.requireConfig) %>);
-    </script>
-  <% } %>
   <% css.forEach(function(style){ %>
   <link rel="stylesheet" type="text/css" href="<%= style %>">
   <% }) %>
-  <script>
-    require([
-      <% scripts.src.forEach(function(script, i){ %>
-      <% if (options.requireConfig && options.requireConfig.baseUrl) script = script.replace(new RegExp('^' + options.requireConfig.baseUrl),""); %>
-      <% if (options.loaderPlugin) script = options.loaderPlugin + '!' + script %>
-        '<%= script.replace(/\.js$/,"") %>' <%= i < scripts.src.length-1 ? ',' : '' %>
-        <% }) %>
-    ],
-    function(){
-      require(['<%= [].concat(scripts.specs,scripts.reporters).join("','") %>'], function(){
-        require(['<%= scripts.start.join("','") %>'], function(){
-          // good to go! Our tests should already be running.
-        })
-      })
+  <style>
+    #require-errors {
+      display: none;
+      font-family: monospace;
+      background-color: white;
     }
-    )
+
+    #require-errors h1 {
+      background-color: #b03911;
+      color: white;
+      font-size: 14px;
+      margin: 0;
+      padding: 5px 10px;
+    }
+
+    #require-errors li {
+      list-style: none;
+      padding: 5px 10px;
+    }
+  </style>
+  <% scripts.forEach(function(script) { %>
+  <script src="<%= script %>"></script>
+  <% }) %>
+  <script>
+    require.onError = function(error) {
+      var message = error.requireType + ': ';
+      if (error.requireType === 'scripterror' || error.requireType === 'notloaded' && error.requireModules) {
+        message += 'Illegal path or script error: ' + '[\'' + error.requireModules.join("', '") + '\']';
+      } else {
+        message += error.message;
+      }
+
+      var requireErrors = document.getElementById('require-errors');
+      requireErrors.innerHTML += '<li>' + message + '</li>';
+      requireErrors.style.display = 'block';
+
+      if (window.console) {
+        window.console.error(message);
+      }
+    };
+
+    require.config(<%= require.config %>);
+    require([<%= require.sources %>], function() {
+      require([<%= require.specsAndReporters %>], function() {
+        require([<%= require.start %>], function() {
+          // good to go! Our tests should already be running.
+        });
+      });
+    });
   </script>
 </head>
 <body>
+<div id="require-errors">
+  <h1>requirejs load errors</h1>
+</div>
 </body>
 </html>

@@ -16,6 +16,12 @@ Default: latest requirejs version included
 
 The version of requirejs to use. Since this template is relatively recent, only versions 2.1.1 and 2.1.2 are
 
+### templateOptions.mainRequireConfigFile
+Type `String`
+
+Path to the main require config file. The configuration is extracted from the require.config({}) call in
+the file, and is passed into the require.config({}) call in the template.
+
 ### templateOptions.requireConfig
 Type: `Object`
 
@@ -42,6 +48,7 @@ grunt.initConfig({
         host: 'http://127.0.0.1:8000/',
         template: require('grunt-template-jasmine-requirejs'),
         templateOptions: {
+          mainRequireConfigFile: 'src/main.js',
           requireConfig: {
             baseUrl: 'src/'
           }
