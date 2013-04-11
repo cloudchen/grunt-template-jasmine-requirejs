@@ -14,7 +14,9 @@ define(function (require) {
 
     it('should init methods in shim config', function () {
       expect(require('nonRequireJsLib')).toBeDefined();
+      expect(require('nonRequireJsLib2')).toBeDefined();
       expect(window.nonRequireJsLib).toBeUndefined();
+      expect(window.nonRequireJsLib2).toBeUndefined();
     });
   });
 });

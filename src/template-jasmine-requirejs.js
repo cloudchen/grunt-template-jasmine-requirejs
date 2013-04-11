@@ -32,7 +32,7 @@ function serializeRequireConfig(requireConfig) {
       return '$$$FUNC' + val.toString() + '$$$';
     }
     return val;
-  }, 2).replace(/"\$\$\$FUNC(.*?)\$\$\$"/m, '$1').replace(/\\n/g, '\n');
+  }, 2).replace(/"\$\$\$FUNC(.*?)\$\$\$"/mg, '$1').replace(/\\n/g, '\n');
 }
 
 exports.process = function(grunt, task, context) {

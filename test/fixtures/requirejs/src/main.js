@@ -12,6 +12,11 @@ require.config({
       init: function () {
         return this.nonRequireJsLib.noConflict();
       }
+    },
+    nonRequireJsLib2: {
+      init: function () {
+        return this.nonRequireJsLib2.noConflict();
+      }
     }
   }
 });
