@@ -10,27 +10,13 @@
   <% }) %>
   <% }; %>
 
+  <script src="<%= temp %>/require.js"></script>
   <% if (options.configFile) { %>
     <script src="<%= options.configFile %>"></script>
   <% } %>
-  
-    <script src="<%= temp %>/require.js"></script>
-  
   <% if (options.requireConfig) { %>
     <script>
-      var require = (function(){
-        var config = <%= JSON.stringify(options.requireConfig) %>;
-        <%
-        for (var item in options.requireConfig) {
-          if (typeof options.requireConfig[item] == 'function') {
-        %>
-        config['<%= item %>'] = <%= options.requireConfig[item].toString() %>;
-        <%
-          }
-        }
-        %>
-        return config;
-      })();    
+      require.config(<%= JSON.stringify(options.requireConfig) %>);
     </script>
   <% } %>
   <% css.forEach(function(style){ %>
