@@ -26,6 +26,15 @@ function toQuotedString(array) {
   return "'" + array.join("','") + "'";
 }
 
+function serializeRequireConfig(requireConfig) {
+  return JSON.stringify(requireConfig, function(key, val) {
+    if (typeof val === 'function') {
+      return '$$$FUNC' + val.toString() + '$$$';
+    }
+    return val;
+  }, 2).replace(/"\$\$\$FUNC(.*?)\$\$\$"/m, '$1').replace(/\\n/g, '\n');
+}
+
 exports.process = function(grunt, task, context) {
 
   var version = context.options.version,
@@ -89,7 +98,7 @@ exports.process = function(grunt, task, context) {
         [context.temp + '/require.js']
     ),
     require: {
-      config: JSON.stringify(requireConfig),
+      config: serializeRequireConfig(requireConfig),
       sources: toQuotedString(context.scripts.src),
       specsAndReporters: toQuotedString([].concat(context.scripts.specs, context.scripts.reporters)),
       start: toQuotedString(context.scripts.start)

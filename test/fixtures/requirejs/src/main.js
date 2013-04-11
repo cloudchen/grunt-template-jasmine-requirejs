@@ -6,6 +6,13 @@ require.config({
     sum: {
       description: "Sum module"
     }
+  },
+  shim: {
+    nonRequireJsLib: {
+      init: function () {
+        return this.nonRequireJsLib.noConflict();
+      }
+    }
   }
 });
 

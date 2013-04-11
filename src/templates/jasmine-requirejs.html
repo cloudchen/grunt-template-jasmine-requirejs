@@ -6,10 +6,47 @@
   <% css.forEach(function(style){ %>
   <link rel="stylesheet" type="text/css" href="<%= style %>">
   <% }) %>
+  <style>
+    #require-errors {
+      display: none;
+      font-family: monospace;
+      background-color: white;
+    }
+
+    #require-errors h1 {
+      background-color: #b03911;
+      color: white;
+      font-size: 14px;
+      margin: 0;
+      padding: 5px 10px;
+    }
+
+    #require-errors li {
+      list-style: none;
+      padding: 5px 10px;
+    }
+  </style>
   <% scripts.forEach(function(script) { %>
   <script src="<%= script %>"></script>
   <% }) %>
   <script>
+    require.onError = function(error) {
+      var message = error.requireType + ': ';
+      if (error.requireType === 'scripterror' || error.requireType === 'notloaded' && error.requireModules) {
+        message += 'Illegal path or script error: ' + '[\'' + error.requireModules.join("', '") + '\']';
+      } else {
+        message += error.message;
+      }
+
+      var requireErrors = document.getElementById('require-errors');
+      requireErrors.innerHTML += '<li>' + message + '</li>';
+      requireErrors.style.display = 'block';
+
+      if (window.console) {
+        window.console.error(message);
+      }
+    };
+
     require.config(<%= require.config %>);
     require([<%= require.sources %>], function() {
       require([<%= require.specsAndReporters %>], function() {
@@ -21,5 +58,8 @@
   </script>
 </head>
 <body>
+<div id="require-errors">
+  <h1>requirejs load errors</h1>
+</div>
 </body>
 </html>
