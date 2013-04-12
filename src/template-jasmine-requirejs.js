@@ -41,7 +41,11 @@ exports.process = function(grunt, task, context) {
     });
   }
 
-  task.copyTempFile(requirejs[version],'require.js');
+  if (!(version in requirejs)) {
+      throw new Error('specified requirejs version [' + version + '] is not defined');
+  } else {
+      task.copyTempFile(requirejs[version],'require.js');
+  }
 
   var source = grunt.file.read(template);
   return grunt.util._.template(source, context);
