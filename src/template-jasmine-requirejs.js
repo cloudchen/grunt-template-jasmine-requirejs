@@ -1,4 +1,3 @@
-
 "use strict";
 
 var template = __dirname + '/templates/jasmine-requirejs.html',
@@ -27,12 +26,28 @@ function toQuotedString(array) {
 }
 
 function serializeRequireConfig(requireConfig) {
-  return JSON.stringify(requireConfig, function(key, val) {
+  var funcCounter = 0;
+  var funcs = {};
+
+  function generateFunctionId() {
+    return '$template-jasmine-require_' + new Date().getTime() + '_' + (++funcCounter);
+  }
+
+  var jsonString = JSON.stringify(requireConfig, function(key, val) {
+    var funcId;
     if (typeof val === 'function') {
-      return '$$$FUNC' + val.toString() + '$$$';
+      funcId = generateFunctionId();
+      funcs[funcId] = val;
+      return funcId;
     }
     return val;
-  }, 2).replace(/"\$\$\$FUNC(.*?)\$\$\$"/mg, '$1').replace(/\\n/g, '\n');
+  }, 2);
+
+  Object.keys(funcs).forEach(function(id) {
+    jsonString = jsonString.replace('"' + id + '"', funcs[id].toString());
+  });
+
+  return jsonString;
 }
 
 exports.process = function(grunt, task, context) {
