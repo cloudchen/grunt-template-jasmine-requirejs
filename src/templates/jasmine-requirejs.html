@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <title>Jasmine Spec Runner</title>
 
+  <script src="<%= temp %>/require.js"></script>
   <% with (scripts) { %>
   <% [].concat(jasmine, vendor, helpers).forEach(function(script){ %>
   <script src="<%= script %>"></script>
   <% }) %>
   <% }; %>
 
-  <script src="<%= temp %>/require.js"></script>
   <script>
     <% if (options.requireConfig) { %>
       require.config(<%= JSON.stringify(options.requireConfig) %>);
