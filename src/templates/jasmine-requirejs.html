@@ -10,32 +10,101 @@
   <% }) %>
   <% }; %>
 
-  <script src="<%= temp %>/require.js"></script>
+
+  <% var hasLaunched = false; %>
+  <script>
+      function launchSpec() {
+        require([
+          <% scripts.src.forEach(function(script, i){ %>
+          <% if (options.requireConfig && options.requireConfig.baseUrl) script = script.replace(new RegExp('^' + options.requireConfig.baseUrl),""); %>
+          <% if (options.loaderPlugin) script = options.loaderPlugin + '!' + script %>
+            '<%= script.replace(/\.js$/,"") %>' <%= i < scripts.src.length-1 ? ',' : '' %>
+            <% }) %>
+        ],
+        function(){
+          require(['<%= [].concat(scripts.specs,scripts.reporters).join("','") %>'], function(){
+            require(['<%= scripts.start.join("','") %>'], function(){
+              // good to go! Our tests should already be running.
+            })
+          })
+        }
+        )
+      }
+  </script>
+
   <script>
     <% if (options.requireConfig) { %>
-      require.config(<%= JSON.stringify(options.requireConfig) %>);
+      var require = (function(){
+            var config = {};
+            <%
+            function stringify(obj, variable) {
+                var objLiteral = '';
+                if (typeof obj == 'object') {
+                    objLiteral += variable + "=";
+                    if (obj.constructor == Array) {
+                        objLiteral += "[];\n";
+                    } else {
+                        objLiteral += "{};\n";
+                    }
+
+                    for (var item in obj) {
+                        if (typeof obj[item] == 'object') {
+                            objLiteral += stringify(obj[item], variable + "['" + item + "']");
+                        } else if (typeof obj[item] == 'function') {
+                            objLiteral += variable + "['" + item + "'] = " + obj[item].toString() + ";\n"
+                        } else if (typeof obj[item] == 'string') {
+                            objLiteral += variable + "['" + item + "'] = '" + obj[item].toString() + "';\n"
+                        } else {
+                            objLiteral += variable + "['" + item + "'] = " + obj[item].toString() + ";\n";
+                        }
+                    }
+                } else if(typeof obj == "string") {
+                    objLiteral += variable + "='" + obj.toString() + "';\n";
+                } else {
+                    objLiteral += variable + "=" + obj.toString() + ";\n";
+                }
+                return objLiteral;
+            }
+        
+            for (var item in options.requireConfig) {
+                if (item == 'callback') {
+            %>
+                config['callback'] = <%= options.requireConfig['callback'].toString().replace(/^function\s+\w*\(([^\)]*)\)\s*\{((?:.|\n)*)}/m, 'function($1) {$2') %>
+            <%
+                if (item == 'callback') {
+                    hasLaunched = true;
+            %>
+                    launchSpec();
+            <%
+                }
+            %>
+                }
+            <%
+                } else {
+            %>
+                <%= stringify(options.requireConfig[item], 'config["' + item + '"]') %>
+            <%
+                }
+            }
+            %>
+
+            return config;
+      })();
     <% } %>
   </script>
+  <script src="<%= temp %>/require.js"></script>
   <% css.forEach(function(style){ %>
   <link rel="stylesheet" type="text/css" href="<%= style %>">
   <% }) %>
+  <%
+  if (!hasLaunched) {
+  %>
   <script>
-    require([
-      <% scripts.src.forEach(function(script, i){ %>
-      <% if (options.requireConfig && options.requireConfig.baseUrl) script = script.replace(new RegExp('^' + options.requireConfig.baseUrl),""); %>
-      <% if (options.loaderPlugin) script = options.loaderPlugin + '!' + script %>
-        '<%= script.replace(/\.js$/,"") %>' <%= i < scripts.src.length-1 ? ',' : '' %>
-        <% }) %>
-    ],
-    function(){
-      require(['<%= [].concat(scripts.specs,scripts.reporters).join("','") %>'], function(){
-        require(['<%= scripts.start.join("','") %>'], function(){
-          // good to go! Our tests should already be running.
-        })
-      })
-    }
-    )
+      launchSpec();
   </script>
+  <%
+  }
+  %>
 </head>
 <body>
 </body>
