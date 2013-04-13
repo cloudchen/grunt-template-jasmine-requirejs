@@ -72,3 +72,8 @@ require([*YOUR SOURCE*], function() {
   }
 }
 ```
+
+### Authors / Maintainers
+
+- Jarrod Overson (@jsoverson)
+- Cloud Chen (@cloudchen)
