@@ -17,7 +17,7 @@
   <script src="<%= temp %>/require.js"></script>
   <script>
     <% if (options.requireConfig) { %>
-      require.config(<%= JSON.stringify(options.requireConfig) %>);
+      require.config(<%= serializeRequireConfig(options.requireConfig) %>);
     <% } %>
   </script>
   <script>

@@ -47,6 +47,31 @@ exports.process = function(grunt, task, context) {
       task.copyTempFile(requirejs[version],'require.js');
   }
 
+  context.serializeRequireConfig = function(requireConfig) {
+      var funcCounter = 0;
+      var funcs = {};
+
+      function generateFunctionId() {
+          return '$template-jasmine-require_' + new Date().getTime() + '_' + (++funcCounter);
+      }
+
+      var jsonString = JSON.stringify(requireConfig, function(key, val) {
+          var funcId;
+          if (typeof val === 'function') {
+              funcId = generateFunctionId();
+              funcs[funcId] = val;
+              return funcId;
+          }
+          return val;
+      }, 2);
+
+      Object.keys(funcs).forEach(function(id) {
+          jsonString = jsonString.replace('"' + id + '"', funcs[id].toString());
+      });
+
+      return jsonString;
+  };
+
   var source = grunt.file.read(template);
   return grunt.util._.template(source, context);
 };
