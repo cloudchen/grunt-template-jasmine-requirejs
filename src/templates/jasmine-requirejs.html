@@ -4,6 +4,10 @@
   <meta charset="utf-8">
   <title>Jasmine Spec Runner</title>
 
+  <% css.forEach(function(style){ %>
+  <link rel="stylesheet" type="text/css" href="<%= style %>">
+  <% }) %>
+
   <% with (scripts) { %>
   <% [].concat(jasmine, vendor, helpers).forEach(function(script){ %>
   <script src="<%= script %>"></script>
@@ -16,9 +20,6 @@
       require.config(<%= JSON.stringify(options.requireConfig) %>);
     <% } %>
   </script>
-  <% css.forEach(function(style){ %>
-  <link rel="stylesheet" type="text/css" href="<%= style %>">
-  <% }) %>
   <script>
     require([
       <% scripts.src.forEach(function(script, i){ %>
