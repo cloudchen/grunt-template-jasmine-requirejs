@@ -11,15 +11,15 @@ npm install grunt-template-jasmine-requirejs --save-dev
 
 ### templateOptions.version
 Type: `String`
-Options: `2.1.1` `2.1.2`
+Options: `2.0.0` to `2.1.5`
 Default: latest requirejs version included
 
-The version of requirejs to use. Since this template is relatively recent, only versions 2.1.1 and 2.1.2 are
+The version of requirejs to use.
 
 ### templateOptions.requireConfig
 Type: `Object`
 
-This object is `JSON.stringify()`-ed into the template and passed into `require.config()`
+This object is `JSON.stringify()`-ed ( **support serialize Function object** ) into the template and passed into `var require` varialbe
 
 
 
@@ -43,7 +43,26 @@ grunt.initConfig({
         template: require('grunt-template-jasmine-requirejs'),
         templateOptions: {
           requireConfig: {
-            baseUrl: 'src/'
+            baseUrl: 'src/',
+            paths: {
+              "jquery": "path/to/jquery"
+            }
+            shim: {
+              'foo': {
+                deps: ['bar'],
+                exports: 'Foo',
+                init: function (bar) {
+                  return this.Foo.noConflict();
+                }
+              }
+            },
+            deps: ['jquery']
+            callback: function($) {
+              // do initialization stuff
+              /*
+              
+              */
+            }
           }
         }
       }
@@ -72,6 +91,40 @@ require([*YOUR SOURCE*], function() {
   }
 }
 ```
+
+If "callback" function is defined in requireConfig, above code will be injected to the end of body of "callback" definition
+```js
+templateOptions: {
+  callback: function() {
+    // suppose we define a module here
+    define("config", {
+      "endpoint": "/path/to/endpoint"
+    })
+  }
+}
+```
+Generated runner page with require configuration looks like:
+```js
+var require = {
+  ...
+  callback: function() {
+    // suppose we define a module here
+    define("config", {
+      "endpoint": "/path/to/endpoint"
+    })
+    
+    require([*YOUR SOURCE*], function() {
+      require([*YOUR SPECS*], function() {
+        require([*GRUNT-CONTRIB-JASMINE FILES*], function() {
+          // at this point your tests are already running.
+        }
+      }
+    }
+  }
+  ...
+}
+```
+This automation can help to avoid unexpected dependency order issue 
 
 ### Authors / Maintainers
 
