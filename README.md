@@ -19,7 +19,7 @@ The version of requirejs to use.
 ### templateOptions.requireConfig
 Type: `Object`
 
-This object is `JSON.stringify()`-ed ( **support serialize Function object** ) into the template and passed into `var require` varialbe
+This object is `JSON.stringify()`-ed ( **support serialize Function object** ) into the template and passed into `var require` variable
 
 
 
