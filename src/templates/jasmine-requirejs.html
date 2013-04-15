@@ -14,12 +14,12 @@
   <% }) %>
   <% }; %>
 
-  <script src="<%= temp %>/require.js"></script>
   <script>
     <% if (options.requireConfig) { %>
-      require.config(<%= serializeRequireConfig(options.requireConfig) %>);
+      var require = <%= serializeRequireConfig(options.requireConfig) %>;
     <% } %>
   </script>
+  <script src="<%= temp %>/require.js"></script>
   <script>
     require([
       <% scripts.src.forEach(function(script, i){ %>
