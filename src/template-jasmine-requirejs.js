@@ -3,8 +3,19 @@
 
 var template = __dirname + '/templates/jasmine-requirejs.html',
     requirejs  = {
+      '2.0.0' : __dirname + '/../vendor/require-2.0.0.js',
+      '2.0.1' : __dirname + '/../vendor/require-2.0.1.js',
+      '2.0.2' : __dirname + '/../vendor/require-2.0.2.js',
+      '2.0.3' : __dirname + '/../vendor/require-2.0.3.js',
+      '2.0.4' : __dirname + '/../vendor/require-2.0.4.js',
+      '2.0.5' : __dirname + '/../vendor/require-2.0.5.js',
+      '2.0.6' : __dirname + '/../vendor/require-2.0.6.js',
+      '2.1.0' : __dirname + '/../vendor/require-2.1.0.js',
       '2.1.1' : __dirname + '/../vendor/require-2.1.1.js',
-      '2.1.2' : __dirname + '/../vendor/require-2.1.2.js'
+      '2.1.2' : __dirname + '/../vendor/require-2.1.2.js',
+      '2.1.3' : __dirname + '/../vendor/require-2.1.3.js',
+      '2.1.4' : __dirname + '/../vendor/require-2.1.4.js',
+      '2.1.5' : __dirname + '/../vendor/require-2.1.5.js'
     };
 
 exports.process = function(grunt, task, context) {
