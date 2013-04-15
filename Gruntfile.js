@@ -1,4 +1,4 @@
-/*global module:false*/
+/*global module:false define:false*/
 module.exports = function(grunt) {
   "use strict";
 
@@ -51,10 +51,23 @@ module.exports = function(grunt) {
           specs: 'test/fixtures/requirejs/spec/*Spec.js',
           helpers: 'test/fixtures/requirejs/spec/*Helper.js',
           host: 'http://127.0.0.1:<%= connect.test.port %>/',
-          template : require('./'),
+          template: require('./'),
           templateOptions: {
-            requireConfig : {
-              baseUrl: './test/fixtures/requirejs/src/'
+            requireConfig: {
+              baseUrl: './test/fixtures/requirejs/src/',
+              "shim": {
+                "fakeShim": {
+                  "exports": 'fakeShim',
+                  "init": function () {
+                    return "this is fake shim";
+                  }
+                }
+              },
+              "callback": function() {
+                define('inlineModule', function() {
+                  return 'this is inline module';
+                });
+              }
             }
           }
         }
