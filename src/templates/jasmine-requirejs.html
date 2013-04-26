@@ -22,7 +22,7 @@
                to make sure spec is called after all initialization stuffs */
 
             // capture the arguments and body fo callback function
-            options.requireConfig['callback'].toString().replace(/^function\s+\w*\(([^\)]*)\)\s*\{((?:.|\n)*)}/m, function(match, args, body) {
+            options.requireConfig['callback'].toString().replace(/^function\s+\w*\(([^\)]*)\)\s*\{((?:.|[\n\r])*)}/m, function(match, args, body) {
                 var being_recreated_function = [];
                 if (args.length > 0) {
                     args = args.split(/,\s*/);
@@ -49,6 +49,7 @@
   function launchTest() {
     require([
       <% scripts.src.forEach(function(script, i){ %>
+      <% script = script.replace(/\\/g, '/') // replace all backward slashes to forward slash %>
       <% if (options.requireConfig && options.requireConfig.baseUrl) script = script.replace(new RegExp('^' + options.requireConfig.baseUrl),""); %>
       <% if (options.loaderPlugin) script = options.loaderPlugin + '!' + script %>
         '<%= script.replace(/\.js$/,"") %>' <%= i < scripts.src.length-1 ? ',' : '' %>
