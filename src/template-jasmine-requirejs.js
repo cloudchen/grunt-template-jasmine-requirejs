@@ -1,54 +1,25 @@
+
 "use strict";
 
 var template = __dirname + '/templates/jasmine-requirejs.html',
     requirejs  = {
+      '2.0.0' : __dirname + '/../vendor/require-2.0.0.js',
+      '2.0.1' : __dirname + '/../vendor/require-2.0.1.js',
+      '2.0.2' : __dirname + '/../vendor/require-2.0.2.js',
+      '2.0.3' : __dirname + '/../vendor/require-2.0.3.js',
+      '2.0.4' : __dirname + '/../vendor/require-2.0.4.js',
+      '2.0.5' : __dirname + '/../vendor/require-2.0.5.js',
+      '2.0.6' : __dirname + '/../vendor/require-2.0.6.js',
+      '2.1.0' : __dirname + '/../vendor/require-2.1.0.js',
       '2.1.1' : __dirname + '/../vendor/require-2.1.1.js',
-      '2.1.2' : __dirname + '/../vendor/require-2.1.2.js'
+      '2.1.2' : __dirname + '/../vendor/require-2.1.2.js',
+      '2.1.3' : __dirname + '/../vendor/require-2.1.3.js',
+      '2.1.4' : __dirname + '/../vendor/require-2.1.4.js',
+      '2.1.5' : __dirname + '/../vendor/require-2.1.5.js'
     },
     path = require('path'),
     parse = require('./lib/parse'),
     mixConfig = require('./lib/mixConfig');
-
-function filterGlobPatterns(scripts) {
-  Object.keys(scripts).forEach(function (group) {
-    if (Array.isArray(scripts[group])) {
-      scripts[group] = scripts[group].filter(function(script) {
-        return script.indexOf('*') === -1;
-      });
-    } else {
-      scripts[group] = [];
-    }
-  });
-}
-
-function toQuotedString(array) {
-  return "'" + array.join("','") + "'";
-}
-
-function serializeRequireConfig(requireConfig) {
-  var funcCounter = 0;
-  var funcs = {};
-
-  function generateFunctionId() {
-    return '$template-jasmine-require_' + new Date().getTime() + '_' + (++funcCounter);
-  }
-
-  var jsonString = JSON.stringify(requireConfig, function(key, val) {
-    var funcId;
-    if (typeof val === 'function') {
-      funcId = generateFunctionId();
-      funcs[funcId] = val;
-      return funcId;
-    }
-    return val;
-  }, 2);
-
-  Object.keys(funcs).forEach(function(id) {
-    jsonString = jsonString.replace('"' + id + '"', funcs[id].toString());
-  });
-
-  return jsonString;
-}
 
 exports.process = function(grunt, task, context) {
 
@@ -59,9 +30,6 @@ exports.process = function(grunt, task, context) {
   if (!version) {
     version = Object.keys(requirejs).sort().pop();
   }
-
-  // Remove glob patterns from scripts (see https://github.com/gruntjs/grunt-contrib-jasmine/issues/42)
-  filterGlobPatterns(context.scripts);
 
   // Extract config from main require config file
   if (context.options.mainRequireConfigFile) {
@@ -78,17 +46,18 @@ exports.process = function(grunt, task, context) {
     mixConfig(requireConfig, context.options.requireConfig);
   }
 
-  // Ensure baseUrl
-  if (!requireConfig.baseUrl) {
-    requireConfig.baseUrl = '/';
+  var src = context.scripts.src;
+  var baseUrl = context.options.requireConfig && context.options.requireConfig.baseUrl;
+  if (!baseUrl) {
+    baseUrl = '/';
   }
 
   // Remove baseUrl and .js from src files
-  context.scripts.src = context.scripts.src.map(function(script) {
-    if (script.indexOf(requireConfig.baseUrl) === 0) {
-      script = script.substr(requireConfig.baseUrl.length);
+  src.forEach(function(script, i){
+    if (baseUrl) {
+      script = script.replace(new RegExp('^' + baseUrl),"");
     }
-    return script.replace(/\.js$/, '');
+    src[i] = script.replace(/\.js$/,"");
   });
 
   // Prepend loaderPlugins to the appropriate files
@@ -102,22 +71,38 @@ exports.process = function(grunt, task, context) {
     });
   }
 
-  task.copyTempFile(requirejs[version], 'require.js');
+  if (!(version in requirejs)) {
+      throw new Error('specified requirejs version [' + version + '] is not defined');
+  } else {
+      task.copyTempFile(requirejs[version],'require.js');
+  }
 
-  return grunt.util._.template(grunt.file.read(template), {
-    css: context.css,
-    scripts: [].concat(
-        context.scripts.jasmine,
-        context.scripts.vendor,
-        context.scripts.helpers,
-        [context.temp + '/require.js']
-    ),
-    require: {
-      config: serializeRequireConfig(requireConfig),
-      sources: toQuotedString(context.scripts.src),
-      specsAndReporters: toQuotedString([].concat(context.scripts.specs, context.scripts.reporters)),
-      start: toQuotedString(context.scripts.start)
-    }
-  });
+  context.serializeRequireConfig = function(requireConfig) {
+      var funcCounter = 0;
+      var funcs = {};
+
+      function generateFunctionId() {
+          return '$template-jasmine-require_' + new Date().getTime() + '_' + (++funcCounter);
+      }
+
+      var jsonString = JSON.stringify(requireConfig, function(key, val) {
+          var funcId;
+          if (typeof val === 'function') {
+              funcId = generateFunctionId();
+              funcs[funcId] = val;
+              return funcId;
+          }
+          return val;
+      }, 2);
+
+      Object.keys(funcs).forEach(function(id) {
+          jsonString = jsonString.replace('"' + id + '"', funcs[id].toString());
+      });
+
+      return jsonString;
+  };
+
+  var source = grunt.file.read(template);
+  return grunt.util._.template(source, context);
 };
 
