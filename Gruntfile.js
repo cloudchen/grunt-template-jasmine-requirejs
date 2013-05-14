@@ -1,4 +1,4 @@
-/*global module:false define:false*/
+/*global module:false, define:false*/
 module.exports = function(grunt) {
   "use strict";
 
@@ -40,11 +40,8 @@ module.exports = function(grunt) {
     },
     connect: {
       test: {
-        options: {
-          port: 9000,
-          host: 'localhost',
-          base: '.'
-        }
+        port: 8000,
+        base: '.'
       }
     },
     jasmine: {
@@ -56,6 +53,7 @@ module.exports = function(grunt) {
           host: 'http://127.0.0.1:<%= connect.test.port %>/',
           template: require('./'),
           templateOptions: {
+            requireConfigFile: 'test/fixtures/requirejs/src/main.js',
             requireConfig : {
               baseUrl: './test/fixtures/requirejs/src/',
               config: {
@@ -75,7 +73,7 @@ module.exports = function(grunt) {
                 define('inlineModule', function() {
                   return 'this is inline module';
                 });
-              }              
+              }
             }
           }
         }

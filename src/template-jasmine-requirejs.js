@@ -21,24 +21,41 @@ var template = __dirname + '/templates/jasmine-requirejs.html',
     parse = require('./lib/parse'),
     mixConfig = require('./lib/mixConfig');
 
+function filterGlobPatterns(scripts) {
+  Object.keys(scripts).forEach(function (group) {
+    if (Array.isArray(scripts[group])) {
+      scripts[group] = scripts[group].filter(function(script) {
+        return script.indexOf('*') === -1;
+      });
+    } else {
+      scripts[group] = [];
+    }
+  });
+}
+
 exports.process = function(grunt, task, context) {
 
   var version = context.options.version,
-      requireConfig = {};
+      requireConfig = {
+        baseUrl: '/'
+      };
 
   // find the latest version if none given
   if (!version) {
     version = Object.keys(requirejs).sort().pop();
   }
 
+  // Remove glob patterns from scripts (see https://github.com/gruntjs/grunt-contrib-jasmine/issues/42)
+  filterGlobPatterns(context.scripts);
+
   // Extract config from main require config file
-  if (context.options.mainRequireConfigFile) {
+  if (context.options.requireConfigFile) {
     // Remove mainConfigFile from src files
     context.scripts.src = grunt.util._.reject(context.scripts.src, function (script) {
-      return path.normalize(script) === path.normalize(context.options.mainRequireConfigFile);
+      return path.normalize(script) === path.normalize(context.options.requireConfigFile);
     });
 
-    requireConfig = parse.findConfig(grunt.file.read(context.options.mainRequireConfigFile)).config;
+    requireConfig = parse.findConfig(grunt.file.read(context.options.requireConfigFile)).config;
   }
 
   // requireConfig overrides main require config
@@ -46,18 +63,13 @@ exports.process = function(grunt, task, context) {
     mixConfig(requireConfig, context.options.requireConfig);
   }
 
-  var src = context.scripts.src;
-  var baseUrl = context.options.requireConfig && context.options.requireConfig.baseUrl;
-  if (!baseUrl) {
-    baseUrl = '/';
-  }
+  // Set the mixed config on the context
+  context.options.requireConfig = requireConfig;
 
   // Remove baseUrl and .js from src files
-  src.forEach(function(script, i){
-    if (baseUrl) {
-      script = script.replace(new RegExp('^' + baseUrl),"");
-    }
-    src[i] = script.replace(/\.js$/,"");
+  context.scripts.src.forEach(function(script, i){
+    script = script.replace(new RegExp('^' + requireConfig.baseUrl),"");
+    context.scripts.src[i] = script.replace(/\.js$/,"");
   });
 
   // Prepend loaderPlugins to the appropriate files

@@ -46,18 +46,17 @@
   </script>
 
   <script>
-  function launchTest() {
+    function launchTest() {
     require([
       <% scripts.src.forEach(function(script, i){ %>
-      <% script = script.replace(/\\/g, '/') // replace all backward slashes to forward slash %>
-      <% if (options.requireConfig && options.requireConfig.baseUrl) script = script.replace(new RegExp('^' + options.requireConfig.baseUrl),""); %>
-      <% if (options.loaderPlugin) script = options.loaderPlugin + '!' + script %>
-        '<%= script.replace(/\.js$/,"") %>' <%= i < scripts.src.length-1 ? ',' : '' %>
-        <% }) %>
+        <% script = script.replace(/\\/g, '/') // replace all backward slashes to forward slash %>
+        '<%= script %>' <%= i < scripts.src.length-1 ? ',' : '' %>
+      <% }) %>
     ],
     function(){
       require(['<%= [].concat(scripts.specs,scripts.reporters).join("','") %>'], function(){
         require(['<%= scripts.start.join("','") %>'], function(){
+          console.log("Hello2");
           // good to go! Our tests should already be running.
         })
       })
