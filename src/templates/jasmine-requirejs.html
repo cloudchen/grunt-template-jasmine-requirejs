@@ -8,6 +8,20 @@
   <link rel="stylesheet" type="text/css" href="<%= style %>">
   <% }) %>
 
+  <script src="<%= temp %>/require.js"></script>
+  <script>
+    require.onError = function(error) {
+      var message = error.requireType + ': ';
+      if (error.requireType === 'scripterror' || error.requireType === 'notloaded' && error.requireModules) {
+        message += 'Illegal path or script error: ' + '[\'' + error.requireModules.join("', '") + '\']';
+      } else {
+        message += error.message;
+      }
+
+      throw Error(message);
+    };
+  </script>
+
   <% with (scripts) { %>
   <% [].concat(jasmine, vendor, helpers).forEach(function(script){ %>
   <script src="<%= script %>"></script>
@@ -15,6 +29,10 @@
   <% }; %>
 
   <script>
+    <% if (options.mainRequireConfig) { %>
+      require.config(<%= serializeRequireConfig(options.mainRequireConfig) %>);
+    <% } %>
+
     <% var hasCallback = false;
        if (options.requireConfig) {
         if ('callback' in options.requireConfig) {
@@ -41,7 +59,7 @@
             });
         }
     %>
-      var require = <%= serializeRequireConfig(options.requireConfig) %>;
+      require.config(<%= serializeRequireConfig(options.requireConfig) %>);
     <% } %>
   </script>
 
@@ -56,27 +74,12 @@
     function(){
       require(['<%= [].concat(scripts.specs,scripts.reporters).join("','") %>'], function(){
         require(['<%= scripts.start.join("','") %>'], function(){
-          console.log("Hello2");
           // good to go! Our tests should already be running.
         })
       })
     }
     )
   }
-  </script>
-
-  <script src="<%= temp %>/require.js"></script>
-  <script>
-      require.onError = function(error) {
-      var message = error.requireType + ': ';
-      if (error.requireType === 'scripterror' || error.requireType === 'notloaded' && error.requireModules) {
-        message += 'Illegal path or script error: ' + '[\'' + error.requireModules.join("', '") + '\']';
-      } else {
-        message += error.message;
-      }
-
-      throw Error(message);
-    };
   </script>
 
   <% if (!hasCallback) { %>

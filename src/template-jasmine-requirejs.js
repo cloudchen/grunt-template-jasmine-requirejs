@@ -18,8 +18,7 @@ var template = __dirname + '/templates/jasmine-requirejs.html',
       '2.1.5' : __dirname + '/../vendor/require-2.1.5.js'
     },
     path = require('path'),
-    parse = require('./lib/parse'),
-    mixConfig = require('./lib/mixConfig');
+    parse = require('./lib/parse');
 
 function filterGlobPatterns(scripts) {
   Object.keys(scripts).forEach(function (group) {
@@ -35,10 +34,7 @@ function filterGlobPatterns(scripts) {
 
 exports.process = function(grunt, task, context) {
 
-  var version = context.options.version,
-      requireConfig = {
-        baseUrl: '/'
-      };
+  var version = context.options.version;
 
   // find the latest version if none given
   if (!version) {
@@ -55,20 +51,13 @@ exports.process = function(grunt, task, context) {
       return path.normalize(script) === path.normalize(context.options.requireConfigFile);
     });
 
-    requireConfig = parse.findConfig(grunt.file.read(context.options.requireConfigFile)).config;
+    context.options.mainRequireConfig = parse.findConfig(grunt.file.read(context.options.requireConfigFile)).config;
   }
-
-  // requireConfig overrides main require config
-  if (context.options.requireConfig) {
-    mixConfig(requireConfig, context.options.requireConfig);
-  }
-
-  // Set the mixed config on the context
-  context.options.requireConfig = requireConfig;
 
   // Remove baseUrl and .js from src files
+  var baseUrl = (context.options.requireConfig && context.options.requireConfig.baseUrl || '/');
   context.scripts.src.forEach(function(script, i){
-    script = script.replace(new RegExp('^' + requireConfig.baseUrl),"");
+    script = script.replace(new RegExp('^' + baseUrl),"");
     context.scripts.src[i] = script.replace(/\.js$/,"");
   });
 
