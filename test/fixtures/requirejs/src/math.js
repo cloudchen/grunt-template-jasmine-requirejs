@@ -1,5 +1,8 @@
-define(['sum'],function(sum){
+define(['sum', 'module'], function(sum, module) {
   return {
-    sum : sum
+    sum: sum,
+    getDescription: function() {
+      return module.config().description;
+    }
   }
-})
+});

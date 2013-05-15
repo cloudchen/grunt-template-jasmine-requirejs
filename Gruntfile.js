@@ -1,4 +1,4 @@
-/*global module:false define:false*/
+/*global module:false, define:false*/
 module.exports = function(grunt) {
   "use strict";
 
@@ -25,7 +25,7 @@ module.exports = function(grunt) {
         src: 'Gruntfile.js'
       },
       lib_test: {
-        src: ['src/**/*.js']
+        src: ['src/**/*.js', '!src/lib/**/*.js']
       }
     },
     watch: {
@@ -53,8 +53,14 @@ module.exports = function(grunt) {
           host: 'http://127.0.0.1:<%= connect.test.port %>/',
           template: require('./'),
           templateOptions: {
-            requireConfig: {
+            requireConfigFile: 'test/fixtures/requirejs/src/main.js',
+            requireConfig : {
               baseUrl: './test/fixtures/requirejs/src/',
+              config: {
+                sum: {
+                  description: "Sum module (overridden)"
+                }
+              },
               "shim": {
                 "fakeShim": {
                   "exports": 'fakeShim',

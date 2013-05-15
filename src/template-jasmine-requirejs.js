@@ -16,7 +16,21 @@ var template = __dirname + '/templates/jasmine-requirejs.html',
       '2.1.3' : __dirname + '/../vendor/require-2.1.3.js',
       '2.1.4' : __dirname + '/../vendor/require-2.1.4.js',
       '2.1.5' : __dirname + '/../vendor/require-2.1.5.js'
-    };
+    },
+    path = require('path'),
+    parse = require('./lib/parse');
+
+function filterGlobPatterns(scripts) {
+  Object.keys(scripts).forEach(function (group) {
+    if (Array.isArray(scripts[group])) {
+      scripts[group] = scripts[group].filter(function(script) {
+        return script.indexOf('*') === -1;
+      });
+    } else {
+      scripts[group] = [];
+    }
+  });
+}
 
 exports.process = function(grunt, task, context) {
 
@@ -27,18 +41,24 @@ exports.process = function(grunt, task, context) {
     version = Object.keys(requirejs).sort().pop();
   }
 
-  var src = context.scripts.src;
-  var baseUrl = context.options.requireConfig && context.options.requireConfig.baseUrl;
-  if (!baseUrl) {
-    baseUrl = '/';
+  // Remove glob patterns from scripts (see https://github.com/gruntjs/grunt-contrib-jasmine/issues/42)
+  filterGlobPatterns(context.scripts);
+
+  // Extract config from main require config file
+  if (context.options.requireConfigFile) {
+    // Remove mainConfigFile from src files
+    context.scripts.src = grunt.util._.reject(context.scripts.src, function (script) {
+      return path.normalize(script) === path.normalize(context.options.requireConfigFile);
+    });
+
+    context.options.mainRequireConfig = parse.findConfig(grunt.file.read(context.options.requireConfigFile)).config;
   }
 
   // Remove baseUrl and .js from src files
-  src.forEach(function(script, i){
-    if (baseUrl) {
-      script = script.replace(new RegExp('^' + baseUrl),"");
-    }
-    src[i] = script.replace(/\.js$/,"");
+  var baseUrl = (context.options.requireConfig && context.options.requireConfig.baseUrl || '/');
+  context.scripts.src.forEach(function(script, i){
+    script = script.replace(new RegExp('^' + baseUrl),"");
+    context.scripts.src[i] = script.replace(/\.js$/,"");
   });
 
   // Prepend loaderPlugins to the appropriate files
