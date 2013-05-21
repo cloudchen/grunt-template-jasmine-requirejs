@@ -51,13 +51,13 @@ exports.process = function(grunt, task, context) {
       return path.normalize(script) === path.normalize(context.options.requireConfigFile);
     });
 
-    context.options.mainRequireConfig = parse.findConfig(grunt.file.read(context.options.requireConfigFile)).config;
+    context.options.requireConfig = parse.findConfig(grunt.file.read(context.options.requireConfigFile)).config;
   }
 
   // Remove baseUrl and .js from src files
   var baseUrl = (context.options.requireConfig && context.options.requireConfig.baseUrl || '/');
   context.scripts.src.forEach(function(script, i){
-    script = script.replace(new RegExp('^' + baseUrl),"");
+    script = script.replace(new RegExp('^' + baseUrl + "/?"),"");
     context.scripts.src[i] = script.replace(/\.js$/,"");
   });
 
