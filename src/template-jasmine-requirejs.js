@@ -44,6 +44,39 @@ exports.process = function(grunt, task, context) {
   // Remove glob patterns from scripts (see https://github.com/gruntjs/grunt-contrib-jasmine/issues/42)
   filterGlobPatterns(context.scripts);
 
+  // Allows for a spec file to be specified via the command line
+  var specPattern,
+      specsArray = [],
+      scriptSpecs = [],
+      specs = grunt.option("spec"),
+      matchPath = function(path) {
+        return !!path.match(specPattern);
+      };
+
+  if(specs) {
+
+    specs = specs.split("*").join("[\\S]*").replace(/\./g, "\\.");
+    specsArray = specs.split(",");
+
+    while(specsArray.length > 0) {
+      specs = (specsArray.splice(0, 1)[0]);
+
+      if(specs.length > 0) {
+        if(specs.indexOf('/') === -1) {
+          specPattern = new RegExp("("+specs+"[^/]*)(?!/)$", "ig");
+        } else if(specs.indexOf('/') === 0) {
+          specPattern = new RegExp("("+specs+"[^/]*)(?=/)", "ig");
+        } else {
+          throw new TypeError("--spec argument seems to be in the wrong format.");
+        }
+
+        [].push.apply(scriptSpecs, context.scripts.specs.filter(matchPath));
+      }
+    }
+
+    context.scripts.specs = grunt.util._.uniq(scriptSpecs);
+  }
+
   // Extract config from main require config file
   if (context.options.requireConfigFile) {
     // Remove mainConfigFile from src files
@@ -73,34 +106,34 @@ exports.process = function(grunt, task, context) {
   }
 
   if (!(version in requirejs)) {
-      throw new Error('specified requirejs version [' + version + '] is not defined');
+    throw new Error('specified requirejs version [' + version + '] is not defined');
   } else {
-      task.copyTempFile(requirejs[version],'require.js');
+    task.copyTempFile(requirejs[version],'require.js');
   }
 
   context.serializeRequireConfig = function(requireConfig) {
-      var funcCounter = 0;
-      var funcs = {};
+    var funcCounter = 0;
+    var funcs = {};
 
-      function generateFunctionId() {
-          return '$template-jasmine-require_' + new Date().getTime() + '_' + (++funcCounter);
+    function generateFunctionId() {
+      return '$template-jasmine-require_' + new Date().getTime() + '_' + (++funcCounter);
+    }
+
+    var jsonString = JSON.stringify(requireConfig, function(key, val) {
+      var funcId;
+      if (typeof val === 'function') {
+        funcId = generateFunctionId();
+        funcs[funcId] = val;
+        return funcId;
       }
+      return val;
+    }, 2);
 
-      var jsonString = JSON.stringify(requireConfig, function(key, val) {
-          var funcId;
-          if (typeof val === 'function') {
-              funcId = generateFunctionId();
-              funcs[funcId] = val;
-              return funcId;
-          }
-          return val;
-      }, 2);
+    Object.keys(funcs).forEach(function(id) {
+      jsonString = jsonString.replace('"' + id + '"', funcs[id].toString());
+    });
 
-      Object.keys(funcs).forEach(function(id) {
-          jsonString = jsonString.replace('"' + id + '"', funcs[id].toString());
-      });
-
-      return jsonString;
+    return jsonString;
   };
 
   var source = grunt.file.read(template);
