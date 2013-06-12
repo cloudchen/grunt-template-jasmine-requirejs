@@ -48,7 +48,7 @@ module.exports = function(grunt) {
       requirejs: {
         src: 'test/fixtures/requirejs/src/**/*.js',
         options: {
-          specs: 'test/fixtures/requirejs/spec/*Spec.js',
+          specs: 'test/fixtures/requirejs/spec/**/*Spec.js',
           helpers: 'test/fixtures/requirejs/spec/*Helper.js',
           host: 'http://127.0.0.1:<%= connect.test.port %>/',
           template: require('./'),
