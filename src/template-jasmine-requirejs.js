@@ -1,4 +1,3 @@
-
 "use strict";
 
 var template = __dirname + '/templates/jasmine-requirejs.html',
@@ -47,11 +46,21 @@ exports.process = function(grunt, task, context) {
   // Extract config from main require config file
   if (context.options.requireConfigFile) {
     // Remove mainConfigFile from src files
+    var requireConfigFiles = grunt.util._.flatten([context.options.requireConfigFile]);
+
+    var normalizedPaths = grunt.util._.map(requireConfigFiles, function(configFile){
+      return path.normalize(configFile);
+    });
     context.scripts.src = grunt.util._.reject(context.scripts.src, function (script) {
-      return path.normalize(script) === path.normalize(context.options.requireConfigFile);
+      return grunt.util._.contains(normalizedPaths, path.normalize(script));
     });
 
-    context.options.requireConfig = parse.findConfig(grunt.file.read(context.options.requireConfigFile)).config;
+    var configFromFiles = {};
+    grunt.util._.map(requireConfigFiles, function (configFile) {
+      grunt.util._.merge(configFromFiles, parse.findConfig(grunt.file.read(configFile)).config);
+    });
+
+    context.options.requireConfig = grunt.util._.merge(configFromFiles, context.options.requireConfig);
   }
 
   // Remove baseUrl and .js from src files
