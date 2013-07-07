@@ -54,12 +54,26 @@ exports.process = function(grunt, task, context) {
     context.options.mainRequireConfig = parse.findConfig(grunt.file.read(context.options.requireConfigFile)).config;
   }
 
+
+  /**
+   * Find and resolve specified baseUrl.
+   */
+  function getBaseUrl(baseUrl) {
+    baseUrl = baseUrl || context.options.requireConfig && context.options.requireConfig.baseUrl || '.';
+    return grunt.file.expand({filter: 'isDirectory'}, baseUrl)[0] || getBaseUrl('.');
+  }
+
+  /**
+   * Retrieves the module URL for a require call relative to the specified Base URL.
+   */
+  function getRelativeModuleUrl(src) {
+    var baseUrl = getBaseUrl();
+    return path.relative(baseUrl, src).replace(/\.js$/, '');
+  }
+
   // Remove baseUrl and .js from src files
-  var baseUrl = (context.options.requireConfig && context.options.requireConfig.baseUrl || '/');
-  context.scripts.src.forEach(function(script, i){
-    script = script.replace(new RegExp('^' + baseUrl),"");
-    context.scripts.src[i] = script.replace(/\.js$/,"");
-  });
+  context.scripts.src = grunt.util._.map(context.scripts.src, getRelativeModuleUrl);
+
 
   // Prepend loaderPlugins to the appropriate files
   if (context.options.loaderPlugin) {
