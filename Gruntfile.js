@@ -85,7 +85,7 @@ module.exports = function(grunt) {
           template: require('./'),
           templateOptions: {
             requireConfig: {
-              baseUrl: 'test/fixtures/requirejs/src/'
+              baseUrl: 'test/fixtures/require-baseurl/src/'
             }
           }
         }
