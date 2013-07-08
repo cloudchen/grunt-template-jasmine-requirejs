@@ -89,6 +89,13 @@ module.exports = function(grunt) {
             }
           }
         }
+      },
+      'require-nobaseurl': {
+        src: 'test/fixtures/require-nobaseurl/src/**/*.js',
+        options: {
+          specs: 'test/fixtures/require-nobaseurl/spec/**/*Spec.js',
+          template: require('./')
+        }
       }
     }
   });

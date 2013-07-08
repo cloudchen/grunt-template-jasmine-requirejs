@@ -3,7 +3,7 @@ define(function() {
   var started = false;
 
   return {
-    fixture: 'require-baseurl',
+    fixture: 'require-nobaseurl',
     start: function() {
       started = true;
     },

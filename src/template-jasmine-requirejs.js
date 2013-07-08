@@ -62,12 +62,12 @@ exports.process = function(grunt, task, context) {
     baseUrl = baseUrl || context.options.requireConfig && context.options.requireConfig.baseUrl || '.';
     return grunt.file.expand({filter: 'isDirectory'}, baseUrl)[0] || getBaseUrl('.');
   }
+  var baseUrl = getBaseUrl();
 
   /**
    * Retrieves the module URL for a require call relative to the specified Base URL.
    */
   function getRelativeModuleUrl(src) {
-    var baseUrl = getBaseUrl();
     return path.relative(baseUrl, src).replace(/\.js$/, '');
   }
 
