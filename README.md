@@ -17,22 +17,26 @@ Default: latest requirejs version included
 The version of requirejs to use.
 
 ### templateOptions.requireConfigFile
-Type `String`
+Type `String` or `Array`
 
-Path to a require config file. The configuration is extracted from the require.config({}) call in
-the file, and is passed into the require.config({}) call in the template.
+This can be a single path to a require config file or an array of paths to multiple require config files. The configuration is extracted from the require.config({}) call(s) in the file, and is passed into the require.config({}) call in the template.
+
+Files are loaded from left to right (using a deep merge). This is so you can have a main config and then override specific settings in additional config files (like a test config) without having to duplicate entire requireJS configs.
+
+If `requireConfig` is also specified then it will be deep-merged onto the settings specified by this directive.
 
 ### templateOptions.requireConfig
 Type: `Object`
 
 This object is `JSON.stringify()`-ed ( **support serialize Function object** ) into the template and passed into `var require` variable
 
+If `requireConfigFile` is specified then it will be loaded first and the settings specified by this directive will be deep-merged onto those.
 
 
 ## Sample usage
 
 ```js
-// Example configuration
+// Example configuration using a single requireJS config file
 grunt.initConfig({
   connect: {
     test : {
@@ -48,7 +52,31 @@ grunt.initConfig({
         host: 'http://127.0.0.1:8000/',
         template: require('grunt-template-jasmine-requirejs'),
         templateOptions: {
-          requireConfigFile: 'src/main.js',
+          requireConfigFile: 'src/main.js'
+        }
+      }
+    }
+  }
+});
+```
+
+```js
+// Example configuration using an inline requireJS config
+grunt.initConfig({
+  connect: {
+    test : {
+      port : 8000
+    }
+  },
+  jasmine: {
+    taskName: {
+      src: 'src/**/*.js',
+      options: {
+        specs: 'spec/*Spec.js',
+        helpers: 'spec/*Helper.js',
+        host: 'http://127.0.0.1:8000/',
+        template: require('grunt-template-jasmine-requirejs'),
+        templateOptions: {
           requireConfig: {
             baseUrl: 'src/',
             paths: {
@@ -67,7 +95,7 @@ grunt.initConfig({
             callback: function($) {
               // do initialization stuff
               /*
-              
+
               */
             }
           }
@@ -77,6 +105,74 @@ grunt.initConfig({
   }
 });
 ```
+
+
+
+```js
+// Example using a base requireJS config file and specifying
+// overrides with an inline requireConfig file.
+grunt.initConfig({
+  connect: {
+    test : {
+      port : 8000
+    }
+  },
+  jasmine: {
+    taskName: {
+      src: 'src/**/*.js',
+      options: {
+        specs: 'spec/*Spec.js',
+        helpers: 'spec/*Helper.js',
+        host: 'http://127.0.0.1:8000/',
+        template: require('grunt-template-jasmine-requirejs'),
+        templateOptions: {
+          requireConfigFile: 'src/main.js',
+          requireConfig: {
+            baseUrl: 'overridden/baseUrl',
+            shim: {
+              // foo will override the 'foo' shim in main.js
+              'foo': {
+                deps: ['bar'],
+                exports: 'Foo'
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+});
+```
+
+```js
+// Example using a multiple requireJS config files. Useful for
+// testing.
+grunt.initConfig({
+  connect: {
+    test : {
+      port : 8000
+    }
+  },
+  jasmine: {
+    taskName: {
+      src: 'src/**/*.js',
+      options: {
+        specs: 'spec/*Spec.js',
+        helpers: 'spec/*Helper.js',
+        host: 'http://127.0.0.1:8000/',
+        template: require('grunt-template-jasmine-requirejs'),
+        templateOptions: {
+          requireConfigFile: ['src/config.js', 'spec/config.js']
+          requireConfig: {
+            baseUrl: 'overridden/baseUrl'
+          }
+        }
+      }
+    }
+  }
+});
+```
+
 
 *Note* the usage of the 'connect' task configuration. You will need to use a task like
 [grunt-contrib-connect][] if you need to test your tasks on a running server.
@@ -119,7 +215,7 @@ var require = {
     define("config", {
       "endpoint": "/path/to/endpoint"
     })
-    
+
     require([*YOUR SOURCE*], function() {
       require([*YOUR SPECS*], function() {
         require([*GRUNT-CONTRIB-JASMINE FILES*], function() {
@@ -131,7 +227,7 @@ var require = {
   ...
 }
 ```
-This automation can help to avoid unexpected dependency order issue 
+This automation can help to avoid unexpected dependency order issue
 
 ### Authors / Maintainers
 

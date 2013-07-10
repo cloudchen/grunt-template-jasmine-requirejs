@@ -1,4 +1,3 @@
-
 "use strict";
 
 var template = __dirname + '/templates/jasmine-requirejs.html',
@@ -15,7 +14,8 @@ var template = __dirname + '/templates/jasmine-requirejs.html',
       '2.1.2' : __dirname + '/../vendor/require-2.1.2.js',
       '2.1.3' : __dirname + '/../vendor/require-2.1.3.js',
       '2.1.4' : __dirname + '/../vendor/require-2.1.4.js',
-      '2.1.5' : __dirname + '/../vendor/require-2.1.5.js'
+      '2.1.5' : __dirname + '/../vendor/require-2.1.5.js',
+      '2.1.6' : __dirname + '/../vendor/require-2.1.6.js'
     },
     path = require('path'),
     parse = require('./lib/parse');
@@ -47,17 +47,27 @@ exports.process = function(grunt, task, context) {
   // Extract config from main require config file
   if (context.options.requireConfigFile) {
     // Remove mainConfigFile from src files
+    var requireConfigFiles = grunt.util._.flatten([context.options.requireConfigFile]);
+
+    var normalizedPaths = grunt.util._.map(requireConfigFiles, function(configFile){
+      return path.normalize(configFile);
+    });
     context.scripts.src = grunt.util._.reject(context.scripts.src, function (script) {
-      return path.normalize(script) === path.normalize(context.options.requireConfigFile);
+      return grunt.util._.contains(normalizedPaths, path.normalize(script));
     });
 
-    context.options.mainRequireConfig = parse.findConfig(grunt.file.read(context.options.requireConfigFile)).config;
+    var configFromFiles = {};
+    grunt.util._.map(requireConfigFiles, function (configFile) {
+      grunt.util._.merge(configFromFiles, parse.findConfig(grunt.file.read(configFile)).config);
+    });
+
+    context.options.requireConfig = grunt.util._.merge(configFromFiles, context.options.requireConfig);
   }
 
   // Remove baseUrl and .js from src files
   var baseUrl = (context.options.requireConfig && context.options.requireConfig.baseUrl || '/');
   context.scripts.src.forEach(function(script, i){
-    script = script.replace(new RegExp('^' + baseUrl),"");
+    script = script.replace(new RegExp('^' + baseUrl + "/?"),"");
     context.scripts.src[i] = script.replace(/\.js$/,"");
   });
 
