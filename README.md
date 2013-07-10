@@ -53,7 +53,7 @@ grunt.initConfig({
             baseUrl: 'src/',
             paths: {
               "jquery": "path/to/jquery"
-            }
+            },
             shim: {
               'foo': {
                 deps: ['bar'],
@@ -63,7 +63,7 @@ grunt.initConfig({
                 }
               }
             },
-            deps: ['jquery']
+            deps: ['jquery'],
             callback: function($) {
               // do initialization stuff
               /*
