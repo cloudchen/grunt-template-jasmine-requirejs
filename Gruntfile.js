@@ -77,6 +77,25 @@ module.exports = function(grunt) {
             }
           }
         }
+      },
+      'require-baseurl': {
+        src: 'test/fixtures/require-baseurl/src/**/*.js',
+        options: {
+          specs: 'test/fixtures/require-baseurl/spec/**/*Spec.js',
+          template: require('./'),
+          templateOptions: {
+            requireConfig: {
+              baseUrl: 'test/fixtures/require-baseurl/src/'
+            }
+          }
+        }
+      },
+      'require-nobaseurl': {
+        src: 'test/fixtures/require-nobaseurl/src/**/*.js',
+        options: {
+          specs: 'test/fixtures/require-nobaseurl/spec/**/*Spec.js',
+          template: require('./')
+        }
       }
     }
   });
@@ -86,7 +105,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-connect');
 
-  grunt.registerTask('test', ['connect', 'jasmine:requirejs']);
+  grunt.registerTask('test', ['connect', 'jasmine']);
 
   // Default task.
   grunt.registerTask('default', ['jshint','test']);
