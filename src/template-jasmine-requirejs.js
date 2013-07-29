@@ -15,7 +15,9 @@ var template = __dirname + '/templates/jasmine-requirejs.html',
       '2.1.3' : __dirname + '/../vendor/require-2.1.3.js',
       '2.1.4' : __dirname + '/../vendor/require-2.1.4.js',
       '2.1.5' : __dirname + '/../vendor/require-2.1.5.js',
-      '2.1.6' : __dirname + '/../vendor/require-2.1.6.js'
+      '2.1.6' : __dirname + '/../vendor/require-2.1.6.js',
+      '2.1.7' : __dirname + '/../vendor/require-2.1.7.js',
+      '2.1.8' : __dirname + '/../vendor/require-2.1.8.js'
     },
     path = require('path'),
     parse = require('./lib/parse');
