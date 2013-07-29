@@ -11,7 +11,7 @@ npm install grunt-template-jasmine-requirejs --save-dev
 
 ### templateOptions.version
 Type: `String`
-Options: `2.0.0` to `2.1.5`
+Options: `2.0.0` to `2.1.8`
 Default: latest requirejs version included
 
 The version of requirejs to use.
