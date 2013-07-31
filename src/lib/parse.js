@@ -351,9 +351,11 @@ parse.findConfig = function(fileContents) {
         return false;
       } else {
         arg = parse.getObjectLiteral(node);
-        jsConfig = parse.nodeToString(fileContents, arg);
-        foundRange = arg.range;
-        return false;
+        if (arg) {
+            jsConfig = parse.nodeToString(fileContents, arg);
+            foundRange = arg.range;
+            return false;
+        }
       }
     }
   });
