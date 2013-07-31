@@ -349,6 +349,11 @@ parse.findConfig = function(fileContents) {
         jsConfig = parse.nodeToString(fileContents, arg);
         foundRange = arg.range;
         return false;
+      } else {
+        arg = parse.getObjectLiteral(node);
+        jsConfig = parse.nodeToString(fileContents, arg);
+        foundRange = arg.range;
+        return false;
       }
     }
   });
@@ -374,6 +379,15 @@ parse.getRequireObjectLiteral = function(node) {
   }
 };
 
+parse.getObjectLiteral = function (node) {
+  if (node.type && node.type === 'ExpressionStatement' &&
+      (node.expression && !node.arguments) &&
+      (node.expression.type && node.expression.type === 'ObjectExpression') &&
+      (node.expression.properties && node.expression.properties.length > 0) &&
+      (node.expression.properties[0].type && node.expression.properties[0].type === 'Property'))
+
+    return node;
+};
 /**
  * Renames require/requirejs/define calls to be ns + '.' + require/requirejs/define
  * Does *not* do .config calls though. See pragma.namespace for the complete
