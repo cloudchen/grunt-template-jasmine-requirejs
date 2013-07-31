@@ -381,6 +381,9 @@ parse.getRequireObjectLiteral = function(node) {
   }
 };
 
+/**
+ * for holding requirejs build file
+ */
 parse.getObjectLiteral = function (node) {
   if (node.type && node.type === 'ExpressionStatement' &&
       (node.expression && !node.arguments) &&
