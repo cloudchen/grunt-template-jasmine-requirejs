@@ -2,6 +2,31 @@
 module.exports = function(grunt) {
   "use strict";
 
+  var defaultTemplateOptions = {
+    requireConfigFile: 'test/fixtures/requirejs/src/main.js',
+    requireConfig : {
+      baseUrl: './test/fixtures/requirejs/src/',
+      config: {
+        sum: {
+          description: "Sum module (overridden)"
+        }
+      },
+      "shim": {
+        "fakeShim": {
+          "exports": 'fakeShim',
+          "init": function () {
+            return "this is fake shim";
+          }
+        }
+      },
+      "callback": function() {
+        define('inlineModule', function() {
+          return 'this is inline module';
+        });
+      }
+    }
+  };
+  
   // Project configuration.
   grunt.initConfig({
     // Task configuration.
@@ -52,30 +77,18 @@ module.exports = function(grunt) {
           helpers: 'test/fixtures/requirejs/spec/*Helper.js',
           host: 'http://127.0.0.1:<%= connect.test.port %>/',
           template: require('./'),
-          templateOptions: {
-            requireConfigFile: 'test/fixtures/requirejs/src/main.js',
-            requireConfig : {
-              baseUrl: './test/fixtures/requirejs/src/',
-              config: {
-                sum: {
-                  description: "Sum module (overridden)"
-                }
-              },
-              "shim": {
-                "fakeShim": {
-                  "exports": 'fakeShim',
-                  "init": function () {
-                    return "this is fake shim";
-                  }
-                }
-              },
-              "callback": function() {
-                define('inlineModule', function() {
-                  return 'this is inline module';
-                });
-              }
-            }
-          }
+          templateOptions: defaultTemplateOptions
+        }
+      },
+
+      version_path_test: {
+        src: 'test/fixtures/requirejs/src/**/*.js',
+        options: {
+          specs: 'test/fixtures/requirejs/spec/*Spec.js',
+          helpers: 'test/fixtures/requirejs/spec/*Helper.js',
+          host: 'http://127.0.0.1:<%= connect.test.port %>/',
+          template: require('./'),
+          templateOptions: grunt.util._.extend({version: "vendor/require-2.1.8.js"}, defaultTemplateOptions)
         }
       },
       parse_test: {
@@ -119,7 +132,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-connect');
 
-  grunt.registerTask('test', ['connect', 'jasmine:requirejs']);
+  grunt.registerTask('test', ['connect', 'jasmine:requirejs', 'jasmine:version_path_test']);
   grunt.registerTask('parse_test', ['connect', 'jasmine:parse_test']);
 
   // Default task.

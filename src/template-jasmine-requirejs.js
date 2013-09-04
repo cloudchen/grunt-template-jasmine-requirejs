@@ -39,7 +39,7 @@ function moveRequireJs(grunt, task, version) {
   if (version in requirejs) {
     pathToRequireJS = requirejs[version];
   } else if (grunt.file.exists(version)) {
-    pathToRequireJS = version; 
+    pathToRequireJS = version;
   } else {
     throw new Error('specified requirejs version [' + version + '] is not defined');
   }
