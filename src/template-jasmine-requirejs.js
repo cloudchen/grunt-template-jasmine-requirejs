@@ -34,6 +34,18 @@ function filterGlobPatterns(scripts) {
   });
 }
 
+function moveRequireJs(grunt, task, version) {
+  var pathToRequireJS;
+  if (version in requirejs) {
+    pathToRequireJS = requirejs[version];
+  } else if (grunt.file.exists(version)) {
+    pathToRequireJS = version; 
+  } else {
+    throw new Error('specified requirejs version [' + version + '] is not defined');
+  }
+  task.copyTempFile(pathToRequireJS,'require.js');
+}
+
 exports.process = function(grunt, task, context) {
 
   var version = context.options.version;
@@ -84,11 +96,7 @@ exports.process = function(grunt, task, context) {
     });
   }
 
-  if (!(version in requirejs)) {
-      throw new Error('specified requirejs version [' + version + '] is not defined');
-  } else {
-      task.copyTempFile(requirejs[version],'require.js');
-  }
+  moveRequireJs(grunt, task, version);  
 
   context.serializeRequireConfig = function(requireConfig) {
       var funcCounter = 0;
@@ -118,4 +126,3 @@ exports.process = function(grunt, task, context) {
   var source = grunt.file.read(template);
   return grunt.util._.template(source, context);
 };
-
