@@ -34,14 +34,29 @@ function filterGlobPatterns(scripts) {
   });
 }
 
-function moveRequireJs(grunt, task, version) {
-  var pathToRequireJS;
-  if (version in requirejs) {
-    pathToRequireJS = requirejs[version];
-  } else if (grunt.file.exists(version)) {
-    pathToRequireJS = version;
-  } else {
-    throw new Error('specified requirejs version [' + version + '] is not defined');
+function resolvePath(filepath) {
+  filepath = filepath.trim();
+  if (filepath.substr(0,1) === '~') {
+    filepath = process.env.HOME + filepath.substr(1);
+  }
+  return path.resolve(filepath);
+}
+
+function moveRequireJs(grunt, task, versionOrPath) {
+  var pathToRequireJS,
+      versionReg = /^(\d\.?)*$/;
+
+  if (versionReg.test(versionOrPath)) { // is version
+      if (versionOrPath in requirejs) {
+        pathToRequireJS = requirejs[versionOrPath];
+      } else {
+        throw new Error('specified requirejs version [' + versionOrPath + '] is not defined');
+      }
+  } else { // is path
+      pathToRequireJS = resolvePath(versionOrPath);
+      if (!grunt.file.exists(pathToRequireJS)) {
+        throw new Error('local file path of requirejs [' + versionOrPath + '] was not found');
+      }
   }
   task.copyTempFile(pathToRequireJS,'require.js');
 }
