@@ -125,39 +125,39 @@ exports.process = function(grunt, task, context) {
     });
   }
 
-  moveRequireJs(grunt, task, version);  
+  moveRequireJs(grunt, task, version);
 
   context.serializeRequireConfig = function(requireConfig) {
-      var funcCounter = 0;
-      var funcs = {};
+    var funcCounter = 0;
+    var funcs = {};
 
-      function isUnserializable(val) {
-          var unserializables = [Function, RegExp];
-          var typeTests = unserializables.map(function(unserializableType) {
-              return val instanceof unserializableType;
-          });
-          return !!~typeTests.indexOf(true);
-      }
-
-      function generateFunctionId() {
-          return '$template-jasmine-require_' + new Date().getTime() + '_' + (++funcCounter);
-      }
-
-      var jsonString = JSON.stringify(requireConfig, function(key, val) {
-          var funcId;
-          if (isUnserializable(val)) {
-              funcId = generateFunctionId();
-              funcs[funcId] = val;
-              return funcId;
-          }
-          return val;
-      }, 2);
-
-      Object.keys(funcs).forEach(function(id) {
-          jsonString = jsonString.replace('"' + id + '"', funcs[id].toString());
+    function isUnserializable(val) {
+      var unserializables = [Function, RegExp];
+      var typeTests = unserializables.map(function(unserializableType) {
+        return val instanceof unserializableType;
       });
+      return !!~typeTests.indexOf(true);
+    }
 
-      return jsonString;
+    function generateFunctionId() {
+      return '$template-jasmine-require_' + new Date().getTime() + '_' + (++funcCounter);
+    }
+
+    var jsonString = JSON.stringify(requireConfig, function(key, val) {
+      var funcId;
+      if (isUnserializable(val)) {
+        funcId = generateFunctionId();
+        funcs[funcId] = val;
+        return funcId;
+      }
+      return val;
+    }, 2);
+
+    Object.keys(funcs).forEach(function(id) {
+      jsonString = jsonString.replace('"' + id + '"', funcs[id].toString());
+    });
+
+    return jsonString;
   };
 
   var source = grunt.file.read(template);
