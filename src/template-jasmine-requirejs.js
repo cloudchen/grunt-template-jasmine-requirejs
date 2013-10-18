@@ -131,13 +131,21 @@ exports.process = function(grunt, task, context) {
       var funcCounter = 0;
       var funcs = {};
 
+      function isUnserializable(val) {
+          var unserializables = [Function, RegExp];
+          var typeTests = unserializables.map(function(unserializableType) {
+              return val instanceof unserializableType;
+          });
+          return !!~typeTests.indexOf(true);
+      }
+
       function generateFunctionId() {
           return '$template-jasmine-require_' + new Date().getTime() + '_' + (++funcCounter);
       }
 
       var jsonString = JSON.stringify(requireConfig, function(key, val) {
           var funcId;
-          if (typeof val === 'function') {
+          if (isUnserializable(val)) {
               funcId = generateFunctionId();
               funcs[funcId] = val;
               return funcId;
