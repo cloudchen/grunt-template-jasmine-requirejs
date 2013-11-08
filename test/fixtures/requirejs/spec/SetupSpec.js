@@ -18,5 +18,11 @@ define(function (require) {
       expect(window.nonRequireJsLib).toBeUndefined();
       expect(window.nonRequireJsLib2).toBeUndefined();
     });
+
+    it('should not try to serialize unserializable objects', function () {
+      var config = require('serializer').config;
+      expect(config.regexp instanceof RegExp).toBe(true);
+      expect(config.fn instanceof Function).toBe(true);
+    })
   });
 });
