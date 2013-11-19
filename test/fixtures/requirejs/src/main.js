@@ -5,6 +5,10 @@ require.config({
     },
     sum: {
       description: "Sum module"
+    },
+    serializer: {
+      regexp: /foo/,
+      fn: function () {}
     }
   },
   shim: {
