@@ -1,6 +1,6 @@
 {
   "name": "grunt-template-jasmine-requirejs",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Requirejs template for grunt-contrib-jasmine",
   "main": "src/template-jasmine-requirejs.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jsoverson/grunt-template-jasmine-requirejs"
+    "url": "https://github.com/cloudchen/grunt-template-jasmine-requirejs"
   },
   "keywords": [
     "grunt",
@@ -18,6 +18,9 @@
     "test"
   ],
   "author": "Jarrod Overson",
+  "contributors": [
+      { "name": "Cloud Chen", "email": "cloudcmh@gmail.com", "url": "https://github.com/cloudchen" }
+  ],
   "license": "BSD",
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.4",
