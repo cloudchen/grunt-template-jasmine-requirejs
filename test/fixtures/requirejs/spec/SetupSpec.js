@@ -5,7 +5,7 @@ define(function (require) {
     });
 
     it('should configure a description for math', function () {
-      expect(require('math').getDescription()).toEqual('Math module');
+      expect(require('math').getDescription()).toEqual('Math module (overridden)');
     });
 
     it('should configure an overidden description for sum', function () {

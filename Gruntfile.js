@@ -7,8 +7,15 @@ module.exports = function(grunt) {
     requireConfig : {
       baseUrl: './test/fixtures/requirejs/src/',
       config: {
+        math: {
+          description: "Math module (overridden)"
+        },
         sum: {
           description: "Sum module (overridden)"
+        },
+        serializer: {
+          regexp: /foo/,
+          fn: function () { return ''; }
         }
       },
       "shim": {
@@ -26,7 +33,7 @@ module.exports = function(grunt) {
       }
     }
   };
-  
+
   // Project configuration.
   grunt.initConfig({
     // Task configuration.
@@ -98,30 +105,10 @@ module.exports = function(grunt) {
           helpers: 'test/fixtures/requirejs/spec/*Helper.js',
           host: 'http://127.0.0.1:<%= connect.test.port %>/',
           template: require('./'),
-          templateOptions: {
+          //templateOptions: defaultTemplateOptions.requireConfig
+          templateOptions: grunt.util._.extend({
             requireConfigFile: 'test/fixtures/requirejs/src/build.js',
-            requireConfig : {
-              baseUrl: './test/fixtures/requirejs/src/',
-              config: {
-                sum: {
-                  description: "Sum module (overridden)"
-                }
-              },
-              "shim": {
-                "fakeShim": {
-                  "exports": 'fakeShim',
-                  "init": function () {
-                    return "this is fake shim";
-                  }
-                }
-              },
-              "callback": function() {
-                define('inlineModule', function() {
-                  return 'this is inline module';
-                });
-              }
-            }
-          }
+          }, defaultTemplateOptions)
         }
       },
       'require-baseurl': {
@@ -151,10 +138,18 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-connect');
 
-  grunt.registerTask('test', ['connect', 'jasmine:requirejs', 'jasmine:version_path_test', 'jasmine:require-baseurl', 'jasmine:require-nobaseurl']);
-  grunt.registerTask('parse_test', ['connect', 'jasmine:parse_test']);
+  grunt.registerTask('test', [
+      'connect',
+      'jasmine:requirejs',
+      'jasmine:version_path_test',
+      'jasmine:require-baseurl',
+      'jasmine:require-nobaseurl',
+      'jasmine:parse_test',
+  ]);
 
   // Default task.
-  grunt.registerTask('default', ['jshint','test']);
-
+  grunt.registerTask('default', [
+      'jshint',
+      'test',
+  ]);
 };
