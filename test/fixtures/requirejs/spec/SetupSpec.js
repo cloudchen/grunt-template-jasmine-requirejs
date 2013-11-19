@@ -5,7 +5,7 @@ define(function (require) {
     });
 
     it('should configure a description for math', function () {
-      expect(require('math').getDescription()).toEqual('Math module');
+      expect(require('math').getDescription()).toEqual('Math module (overridden)');
     });
 
     it('should configure an overidden description for sum', function () {
@@ -18,5 +18,11 @@ define(function (require) {
       expect(window.nonRequireJsLib).toBeUndefined();
       expect(window.nonRequireJsLib2).toBeUndefined();
     });
+
+    it('should not try to serialize unserializable objects', function () {
+      var config = require('serializer').config;
+      expect(config.regexp instanceof RegExp).toBe(true);
+      expect(config.fn instanceof Function).toBe(true);
+    })
   });
 });
