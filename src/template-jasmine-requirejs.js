@@ -42,6 +42,15 @@ function resolvePath(filepath) {
   return path.resolve(filepath);
 }
 
+function resolvePackageRoot(baseUrl, pkg) {
+  var root = baseUrl + path.sep;
+  if (pkg.location) {
+    root += pkg.location + path.sep;
+  }
+  root += pkg.main ? pkg.main : 'main';
+  return path.normalize(root);
+}
+
 function moveRequireJs(grunt, task, versionOrPath) {
   var pathToRequireJS,
       versionReg = /^(\d\.?)*$/;
@@ -94,10 +103,29 @@ exports.process = function(grunt, task, context) {
   }
 
   // Remove baseUrl and .js from src files
-  var baseUrl = (context.options.requireConfig && context.options.requireConfig.baseUrl || '/');
-  context.scripts.src.forEach(function(script, i){
-    script = script.replace(new RegExp('^' + baseUrl + "/?"),"");
-    context.scripts.src[i] = script.replace(/\.js$/,"");
+  var module = false;
+  var baseUrl = path.normalize(context.options.requireConfig && context.options.requireConfig.baseUrl || path.sep);
+
+  var packages = context.options.requireConfig.packages || [];
+  packages.forEach(function (pkg) {
+    var root = resolvePackageRoot(baseUrl, pkg);
+    var rootPath = path.dirname(root);
+    if (rootPath === baseUrl) {
+      module = pkg;
+    }
+  });
+
+  var prefix = module ? module.name : '';
+  var main = module ? resolvePackageRoot(baseUrl, module) : false;
+  context.scripts.src.forEach(function(script, i) {
+    script = path.normalize(script);
+    script = script.replace(/\.js$/,"");
+    if (script === main) {
+      script = module.name;
+    } else {
+      script = script.replace(new RegExp('^' + baseUrl + path.sep + "?"), prefix);
+    }
+    context.scripts.src[i] = script;
   });
 
   // Prepend loaderPlugins to the appropriate files
@@ -111,7 +139,7 @@ exports.process = function(grunt, task, context) {
     });
   }
 
-  moveRequireJs(grunt, task, version);  
+  moveRequireJs(grunt, task, version);
 
   context.serializeRequireConfig = function(requireConfig) {
       var funcCounter = 0;

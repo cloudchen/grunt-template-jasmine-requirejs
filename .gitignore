@@ -1,5 +1,7 @@
-node_modules
-npm-debug.log
 *.iml
 .idea
 .grunt
+
+/node_modules
+/npm-debug.log
+/_SpecRunner.html
