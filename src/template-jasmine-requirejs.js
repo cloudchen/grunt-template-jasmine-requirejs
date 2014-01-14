@@ -34,6 +34,20 @@ function filterGlobPatterns(scripts) {
   });
 }
 
+function filterFiles(scripts, ignore) {
+  ignore = Array.isArray(ignore) ? ignore : [];
+  Object.keys(scripts).forEach(function (group) {
+    if (Array.isArray(scripts[group])) {
+      scripts[group] = scripts[group].filter(function(script) {
+        if (ignore.indexOf(script) === 0) {
+          return false;
+        }
+        return true;
+      });
+    }
+  });
+}
+
 function resolvePath(filepath) {
   filepath = filepath.trim();
   if (filepath.substr(0,1) === '~') {
@@ -72,6 +86,9 @@ exports.process = function(grunt, task, context) {
 
   // Remove glob patterns from scripts (see https://github.com/gruntjs/grunt-contrib-jasmine/issues/42)
   filterGlobPatterns(context.scripts);
+
+  // Filter out files that user has defined.
+  filterFiles(context.scripts, context.options.ignoreFiles);
 
   // Extract config from main require config file
   if (context.options.requireConfigFile) {
