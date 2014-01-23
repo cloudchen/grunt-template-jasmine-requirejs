@@ -129,7 +129,20 @@ module.exports = function(grunt) {
           specs: 'test/fixtures/require-nobaseurl/spec/**/*Spec.js',
           template: require('./')
         }
-      }
+      },
+      'require-outfile': {
+        src: 'test/fixtures/require-baseurl/src/**/*.js',
+        options: {
+          outfile: "custom/path/to/_SpecRunner.html",
+          specs: 'test/fixtures/require-baseurl/spec/**/*Spec.js',
+          template: require('./'),
+          templateOptions: {
+            requireConfig: {
+              baseUrl: '../../../test/fixtures/require-baseurl/src/'
+            }
+          }
+        }
+      },
     },
     bump: {
       options: {
