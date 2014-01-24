@@ -1,4 +1,4 @@
-RequireJS template for Jasmine unit tests
+RequireJS template for Jasmine unit tests [![Build Status](https://travis-ci.org/cloudchen/grunt-template-jasmine-requirejs.png?branch=master)](https://travis-ci.org/cloudchen/grunt-template-jasmine-requirejs)
 -----------------------------------------
 
 ## Installation

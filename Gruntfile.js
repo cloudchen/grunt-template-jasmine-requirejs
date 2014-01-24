@@ -140,11 +140,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('test', [
       'connect',
-      'jasmine:requirejs',
-      'jasmine:version_path_test',
-      'jasmine:require-baseurl',
-      'jasmine:require-nobaseurl',
-      'jasmine:parse_test',
+      'jasmine',
   ]);
 
   // Default task.
