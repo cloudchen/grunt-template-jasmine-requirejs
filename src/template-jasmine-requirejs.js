@@ -101,7 +101,10 @@ exports.process = function(grunt, task, context) {
    */
   function getBaseUrl(baseUrl) {
     baseUrl = baseUrl || context.options.requireConfig && context.options.requireConfig.baseUrl || '.';
-    return grunt.file.expand({filter: 'isDirectory'}, baseUrl)[0] || getBaseUrl('.');
+    return grunt.file.expand({
+        filter: 'isDirectory',
+        cwd: path.dirname(path.join(process.cwd(), context.outfile))
+    }, baseUrl)[0] || getBaseUrl('.');
   }
   var baseUrl = getBaseUrl();
 
@@ -161,6 +164,10 @@ exports.process = function(grunt, task, context) {
 
     return jsonString;
   };
+
+  // update relative path of .grunt folder to the location of spec runner
+  context.temp = path.relative(path.dirname(context.outfile),
+                               context.temp);
 
   var source = grunt.file.read(template);
   return grunt.util._.template(source, context);
