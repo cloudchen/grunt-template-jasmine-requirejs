@@ -17,9 +17,21 @@ npm install grunt-contrib-jasmine@0.5.2 --save-dev
 ```
 
 ## Installation
+=======
+## Jasmine 2.0 and 1.3 Support
+From version `0.2.0`, Jasmine 1.3 is no longer supported.
+
+Actually, template shouldn't have any dependecy with specified verion of `grunt-contrib-jasmine`, but there are breaking changes with `0.6.0` of `grunt-contrib-jasmine` task.
+
+So we recommend you to use latest version of this template and Jasmine 2.0 which is much better than 1.3.
 
 ```
 npm install grunt-template-jasmine-requirejs --save-dev
+```
+
+*If you still want to use Jasmine 1.3*
+```
+npm install grunt-template-jasmine-requirejs@0.1.8 --save-dev
 ```
 
 ## Template Options
@@ -250,3 +262,4 @@ This automation can help to avoid unexpected dependency order issue
 
 - Jarrod Overson (@jsoverson)
 - Cloud Chen (@cloudchen)
+
