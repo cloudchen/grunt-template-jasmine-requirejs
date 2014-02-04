@@ -243,6 +243,9 @@ var require = {
 ```
 This automation can help to avoid unexpected dependency order issue
 
+## Change Log
+* v0.1.9, 02.04.14, [#57](https://github.com/cloudchen/grunt-template-jasmine-requirejs/issues/57) prevents conflict with `grunt-contrib-jasmine` 0.6.x, added requirejs 2.1.9 & 2.1.10
+
 ### Authors / Maintainers
 
 - Jarrod Overson (@jsoverson)
