@@ -130,6 +130,11 @@ module.exports = function(grunt) {
           template: require('./')
         }
       }
+    },
+    bump: {
+      options: {
+        pushTo: 'origin'
+      }
     }
   });
 
@@ -137,6 +142,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-npm');
+  grunt.loadNpmTasks('grunt-bump');
 
   grunt.registerTask('test', [
       'connect',
