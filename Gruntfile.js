@@ -145,10 +145,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-npm');
   grunt.loadNpmTasks('grunt-bump');
 
-  grunt.registerTask('test', [
-      'connect',
-      'jasmine',
-  ]);
+  grunt.registerTask('test', function(subTask) {
+    var taskList = [
+        'connect',
+        ['jasmine', subTask].join(':')
+    ];
+    grunt.task.run(taskList);
+  });
 
   // Default task.
   grunt.registerTask('default', [
