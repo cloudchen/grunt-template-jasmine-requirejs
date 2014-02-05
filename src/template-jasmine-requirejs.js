@@ -119,9 +119,9 @@ exports.process = function(grunt, task, context) {
   // Prepend loaderPlugins to the appropriate files
   if (context.options.loaderPlugin) {
     Object.keys(context.options.loaderPlugin).forEach(function(type){
-      if (context[type]) {
-        context[type].forEach(function(file,i){
-          context[type][i] = context.options.loaderPlugin[type] + '!' + file;
+      if (context.scripts[type]) {
+        context.scripts[type].forEach(function(file,i){
+          context.scripts[type][i] = context.options.loaderPlugin[type] + '!' + file;
         });
       }
     });
