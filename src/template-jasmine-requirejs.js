@@ -115,7 +115,7 @@ exports.process = function(grunt, task, context) {
     }
   });
 
-  var prefix = module ? module.name : '';
+  var prefix = module ? (module.name + '/') : '';
   var main = module ? resolvePackageRoot(baseUrl, module) : false;
   context.scripts.src.forEach(function(script, i) {
     script = path.normalize(script);
