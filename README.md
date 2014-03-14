@@ -2,7 +2,7 @@ RequireJS template for Jasmine unit tests [![Build Status](https://travis-ci.org
 -----------------------------------------
 
 ## Conflict with `grunt-contrib-jasmine` 0.6.x
-The host package of this template has been upgrade to 0.6.x, which enables Jasmine 2.0 support.
+The host package of this template has been upgraded to 0.6.x, which enables Jasmine 2.0 support.
 
 Unfortunately, there's major conflict which can't be solved by code changes.
 
@@ -10,28 +10,15 @@ You cannot use this template in conjunction with 0.6.x of `grunt-contrib-jasmine
 
 We released v0.1.9 patch version with strict `peerDependencies` of host package to notify version conflict.
 
-If you meet that error message, please downgrade your `grunt-contrib-jasmine` to `~0.5.2` by running below command:
+If you meet that error message, please downgrade your `grunt-contrib-jasmine` to `~0.5.3` by running below command:
 
 ```
-npm install grunt-contrib-jasmine@0.5.2 --save-dev
+npm install grunt-contrib-jasmine@0.5.3 --save-dev
 ```
 
 ## Installation
-=======
-## Jasmine 2.0 and 1.3 Support
-From version `0.2.0`, Jasmine 1.3 is no longer supported.
-
-Actually, template shouldn't have any dependecy with specified verion of `grunt-contrib-jasmine`, but there are breaking changes with `0.6.0` of `grunt-contrib-jasmine` task.
-
-So we recommend you to use latest version of this template and Jasmine 2.0 which is much better than 1.3.
-
 ```
 npm install grunt-template-jasmine-requirejs --save-dev
-```
-
-*If you still want to use Jasmine 1.3*
-```
-npm install grunt-template-jasmine-requirejs@0.1.8 --save-dev
 ```
 
 ## Template Options
@@ -262,4 +249,3 @@ This automation can help to avoid unexpected dependency order issue
 
 - Jarrod Overson (@jsoverson)
 - Cloud Chen (@cloudchen)
-
