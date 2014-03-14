@@ -8,7 +8,12 @@
   <link rel="stylesheet" type="text/css" href="<%= style %>">
   <% }) %>
 
-  <script src="<%= temp %>/require.js"></script>
+  <% if (options.requireFile) { %>
+    <script src="<%= options.requireFile %>"></script>
+  <% } else { %>
+    <script src="<%= temp %>/require.js"></script>
+  <% } %>
+  
   <script>
     require.onError = function(error) {
       var message = error.requireType + ': ';
