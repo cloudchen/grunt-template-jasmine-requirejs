@@ -23,7 +23,7 @@
   </script>
 
   <% with (scripts) { %>
-  <% [].concat(jasmine, vendor, helpers).forEach(function(script){ %>
+  <% [].concat(jasmine, boot, vendor, helpers).forEach(function(script){ %>
   <script src="<%= script %>"></script>
   <% }) %>
   <% }; %>
@@ -73,9 +73,7 @@
     ],
     function(){
       require(['<%= [].concat(scripts.specs,scripts.reporters).join("','") %>'], function(){
-        require(['<%= (scripts.boot || scripts.start).join("','") %>'], function(){
-          // good to go! Our tests should already be running.
-        })
+        window.onload();
       })
     }
     )
