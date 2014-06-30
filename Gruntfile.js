@@ -107,7 +107,7 @@ module.exports = function(grunt) {
           template: require('./'),
           //templateOptions: defaultTemplateOptions.requireConfig
           templateOptions: grunt.util._.extend({
-            requireConfigFile: 'test/fixtures/requirejs/src/build.js',
+            requireConfigFile: 'test/fixtures/requirejs/src/build.js'
           }, defaultTemplateOptions)
         }
       },
@@ -143,6 +143,14 @@ module.exports = function(grunt) {
           }
         }
       },
+      'custom-template': {
+        options: {
+          specs: 'test/fixtures/requirejs-template/spec/*Spec.js',
+          host: 'http://127.0.0.1:<%= connect.test.port %>/',
+          template: require('./'),
+          templateOptions:  grunt.util._.extend({src: "test/fixtures/requirejs-template/src/customTemplate.html"}, defaultTemplateOptions)
+        }
+      }
     },
     bump: {
       options: {

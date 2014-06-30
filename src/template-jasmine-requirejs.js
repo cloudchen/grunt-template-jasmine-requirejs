@@ -1,7 +1,7 @@
 "use strict";
 
-var template = __dirname + '/templates/jasmine-requirejs.html',
-    requirejs  = {
+var defaultTemplate = __dirname + '/templates/jasmine-requirejs.html',
+  requirejs  = {
       '2.0.0' : __dirname + '/../vendor/require-2.0.0.js',
       '2.0.1' : __dirname + '/../vendor/require-2.0.1.js',
       '2.0.2' : __dirname + '/../vendor/require-2.0.2.js',
@@ -166,9 +166,11 @@ exports.process = function(grunt, task, context) {
   };
 
   // update relative path of .grunt folder to the location of spec runner
-  context.temp = path.relative(path.dirname(context.outfile),
-                               context.temp);
+  context.temp = path.relative(path.dirname(context.outfile), context.temp);
 
-  var source = grunt.file.read(template);
+  // get custom template or default to project template
+  var template = context.options.src ? context.options.src : defaultTemplate,
+   source = grunt.file.read(template);
+
   return grunt.util._.template(source, context);
 };

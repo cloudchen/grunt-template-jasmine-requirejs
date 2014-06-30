@@ -37,6 +37,11 @@ This object is `JSON.stringify()`-ed ( **support serialize Function object** ) i
 
 If `requireConfigFile` is specified then it will be loaded first and the settings specified by this directive will be deep-merged onto those.
 
+### templateOptions.src
+Type: `String`
+
+This string is the path to the custom template html source
+
 
 ## Sample usage
 
@@ -176,6 +181,34 @@ grunt.initConfig({
     }
   }
 });
+```
+
+```js
+// Example configuration using a single requireJS config file
+// With custom requirejs template
+grunt.initConfig({
+  connect: {
+    test : {
+      port : 8000
+    }
+  },
+  jasmine: {
+    taskName: {
+      src: 'src/**/*.js',
+      options: {
+        specs: 'spec/*Spec.js',
+        helpers: 'spec/*Helper.js',
+        host: 'http://127.0.0.1:8000/',
+        template: require('grunt-template-jasmine-requirejs'),
+        templateOptions: {
+          src: 'path/to/template/src/file.html',
+          requireConfigFile: 'src/main.js'
+        }
+      }
+    }
+  }
+});
+
 ```
 
 
