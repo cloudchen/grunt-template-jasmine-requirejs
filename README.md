@@ -1,17 +1,23 @@
-RequireJS template for Jasmine unit tests
+RequireJS template for Jasmine unit tests [![Build Status](https://travis-ci.org/cloudchen/grunt-template-jasmine-requirejs.png?branch=master)](https://travis-ci.org/cloudchen/grunt-template-jasmine-requirejs)
 -----------------------------------------
 
 ## Installation
-
+By default, this template works with Jasmine 2.x
 ```
 npm install grunt-template-jasmine-requirejs --save-dev
+```
+
+## Support for both Jasmine 1.x and 2.x
+You'd install `~0.1` version of this template if your test specs are based on Jasmine 1.x
+```
+npm install grunt-template-jasmine-requirejs@~0.1 --save-dev
 ```
 
 ## Template Options
 
 ### templateOptions.version
 Type: `String`
-Options: `2.0.0` to `2.1.8` or path to a local file system version(relative to Gruntfile.js). Absolute path is allowed as well. Default: latest requirejs version included
+Options: `2.0.0` to `2.1.10` or path to a local file system version(relative to Gruntfile.js). Absolute path is allowed as well. Default: latest requirejs version included
 
 The version of requirejs to use.
 
@@ -227,6 +233,10 @@ var require = {
 }
 ```
 This automation can help to avoid unexpected dependency order issue
+
+## Change Log
+* v0.1.10 03.14.14, Fixed [#53](https://github.com/cloudchen/grunt-template-jasmine-requirejs/pull/53), [#52](https://github.com/cloudchen/grunt-template-jasmine-requirejs/issues/52), [#46](https://github.com/cloudchen/grunt-template-jasmine-requirejs/issues/46), [#36](https://github.com/cloudchen/grunt-template-jasmine-requirejs/issues/36) wrong path error when runner outfile is specified at elsewhere
+* v0.1.9, 02.04.14, [#57](https://github.com/cloudchen/grunt-template-jasmine-requirejs/issues/57) prevents conflict with `grunt-contrib-jasmine` 0.6.x, added requirejs 2.1.9 & 2.1.10
 
 ### Authors / Maintainers
 

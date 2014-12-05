@@ -129,6 +129,24 @@ module.exports = function(grunt) {
           specs: 'test/fixtures/require-nobaseurl/spec/**/*Spec.js',
           template: require('./')
         }
+      },
+      'require-outfile': {
+        src: 'test/fixtures/require-baseurl/src/**/*.js',
+        options: {
+          outfile: "custom/path/to/_SpecRunner.html",
+          specs: 'test/fixtures/require-baseurl/spec/**/*Spec.js',
+          template: require('./'),
+          templateOptions: {
+            requireConfig: {
+              baseUrl: '../../../test/fixtures/require-baseurl/src/'
+            }
+          }
+        }
+      },
+    },
+    bump: {
+      options: {
+        pushTo: 'origin'
       }
     }
   });
@@ -137,15 +155,16 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-npm');
+  grunt.loadNpmTasks('grunt-bump');
 
-  grunt.registerTask('test', [
-      'connect',
-      'jasmine:requirejs',
-      'jasmine:version_path_test',
-      'jasmine:require-baseurl',
-      'jasmine:require-nobaseurl',
-      'jasmine:parse_test',
-  ]);
+  grunt.registerTask('test', function(subTask) {
+    var taskList = [
+        'connect',
+        ['jasmine', subTask].join(':')
+    ];
+    grunt.task.run(taskList);
+  });
 
   // Default task.
   grunt.registerTask('default', [

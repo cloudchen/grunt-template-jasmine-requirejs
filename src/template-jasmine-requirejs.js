@@ -17,7 +17,9 @@ var template = __dirname + '/templates/jasmine-requirejs.html',
       '2.1.5' : __dirname + '/../vendor/require-2.1.5.js',
       '2.1.6' : __dirname + '/../vendor/require-2.1.6.js',
       '2.1.7' : __dirname + '/../vendor/require-2.1.7.js',
-      '2.1.8' : __dirname + '/../vendor/require-2.1.8.js'
+      '2.1.8' : __dirname + '/../vendor/require-2.1.8.js',
+      '2.1.9' : __dirname + '/../vendor/require-2.1.9.js',
+      '2.1.10' : __dirname + '/../vendor/require-2.1.10.js'
     },
     path = require('path'),
     parse = require('./lib/parse');
@@ -99,7 +101,10 @@ exports.process = function(grunt, task, context) {
    */
   function getBaseUrl(baseUrl) {
     baseUrl = baseUrl || context.options.requireConfig && context.options.requireConfig.baseUrl || '.';
-    return grunt.file.expand({filter: 'isDirectory'}, baseUrl)[0] || getBaseUrl('.');
+    return grunt.file.expand({
+        filter: 'isDirectory',
+        cwd: path.dirname(path.join(process.cwd(), context.outfile))
+    }, baseUrl)[0] || getBaseUrl('.');
   }
   var baseUrl = getBaseUrl();
 
@@ -117,9 +122,9 @@ exports.process = function(grunt, task, context) {
   // Prepend loaderPlugins to the appropriate files
   if (context.options.loaderPlugin) {
     Object.keys(context.options.loaderPlugin).forEach(function(type){
-      if (context[type]) {
-        context[type].forEach(function(file,i){
-          context[type][i] = context.options.loaderPlugin[type] + '!' + file;
+      if (context.scripts[type]) {
+        context.scripts[type].forEach(function(file,i){
+          context.scripts[type][i] = context.options.loaderPlugin[type] + '!' + file;
         });
       }
     });
@@ -159,6 +164,10 @@ exports.process = function(grunt, task, context) {
 
     return jsonString;
   };
+
+  // update relative path of .grunt folder to the location of spec runner
+  context.temp = path.relative(path.dirname(context.outfile),
+                               context.temp);
 
   var source = grunt.file.read(template);
   return grunt.util._.template(source, context);
