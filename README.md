@@ -235,6 +235,8 @@ var require = {
 This automation can help to avoid unexpected dependency order issue
 
 ## Change Log
+* v0.2.1 Fixed [#65](https://github.com/cloudchen/grunt-template-jasmine-requirejs/pull/65)
+* v0.2.0 Added Jasmine 2 support
 * v0.1.10 03.14.14, Fixed [#53](https://github.com/cloudchen/grunt-template-jasmine-requirejs/pull/53), [#52](https://github.com/cloudchen/grunt-template-jasmine-requirejs/issues/52), [#46](https://github.com/cloudchen/grunt-template-jasmine-requirejs/issues/46), [#36](https://github.com/cloudchen/grunt-template-jasmine-requirejs/issues/36) wrong path error when runner outfile is specified at elsewhere
 * v0.1.9, 02.04.14, [#57](https://github.com/cloudchen/grunt-template-jasmine-requirejs/issues/57) prevents conflict with `grunt-contrib-jasmine` 0.6.x, added requirejs 2.1.9 & 2.1.10
 
