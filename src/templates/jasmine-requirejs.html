@@ -7,6 +7,12 @@
   <% css.forEach(function(style){ %>
   <link rel="stylesheet" type="text/css" href="<%= style %>">
   <% }) %>
+  
+  <% with (scripts) { %>
+  <% [].concat(jasmine, boot, vendor, helpers).forEach(function(script){ %>
+  <script src="<%= script %>"></script>
+  <% }) %>
+  <% }; %>
 
   <script src="<%= temp %>/require.js"></script>
   <script>
@@ -21,12 +27,6 @@
       throw Error(message);
     };
   </script>
-
-  <% with (scripts) { %>
-  <% [].concat(jasmine, boot, vendor, helpers).forEach(function(script){ %>
-  <script src="<%= script %>"></script>
-  <% }) %>
-  <% }; %>
 
   <script>
     <% if (options.mainRequireConfig) { %>
