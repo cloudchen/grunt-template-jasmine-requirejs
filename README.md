@@ -13,6 +13,18 @@ You'd install `~0.1` version of this template if your test specs are based on Ja
 npm install grunt-template-jasmine-requirejs@~0.1 --save-dev
 ```
 
+## Options
+
+### vendor
+Type: `String|Array`
+
+Works same as original. But they are loaded **before** require.js script file
+
+### helpers
+Type: `String|Array`
+
+Works same as original. But they are loaded **after** require.js script file
+
 ## Template Options
 
 ### templateOptions.version
@@ -235,6 +247,7 @@ var require = {
 This automation can help to avoid unexpected dependency order issue
 
 ## Change Log
+* v0.2.2 Fixed regression which casued by [#65](https://github.com/cloudchen/grunt-template-jasmine-requirejs/pull/65)
 * v0.2.1 Fixed [#65](https://github.com/cloudchen/grunt-template-jasmine-requirejs/pull/65)
 * v0.2.0 Added Jasmine 2 support
 * v0.1.10 03.14.14, Fixed [#53](https://github.com/cloudchen/grunt-template-jasmine-requirejs/pull/53), [#52](https://github.com/cloudchen/grunt-template-jasmine-requirejs/issues/52), [#46](https://github.com/cloudchen/grunt-template-jasmine-requirejs/issues/46), [#36](https://github.com/cloudchen/grunt-template-jasmine-requirejs/issues/36) wrong path error when runner outfile is specified at elsewhere

@@ -9,12 +9,19 @@
   <% }) %>
   
   <% with (scripts) { %>
-  <% [].concat(jasmine, boot, vendor, helpers).forEach(function(script){ %>
+  <% [].concat(vendor).forEach(function(script){ %>
   <script src="<%= script %>"></script>
   <% }) %>
   <% }; %>
 
   <script src="<%= temp %>/require.js"></script>
+
+  <% with (scripts) { %>
+  <% [].concat(jasmine, boot, helpers).forEach(function(script){ %>
+  <script src="<%= script %>"></script>
+  <% }) %>
+  <% }; %>
+
   <script>
     require.onError = function(error) {
       var message = error.requireType + ': ';
