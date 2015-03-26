@@ -99,12 +99,15 @@ exports.process = function(grunt, task, context) {
   /**
    * Find and resolve specified baseUrl.
    */
-  function getBaseUrl(baseUrl) {
-    baseUrl = baseUrl || context.options.requireConfig && context.options.requireConfig.baseUrl || '.';
-    return grunt.file.expand({
-        filter: 'isDirectory',
-        cwd: path.dirname(path.join(process.cwd(), context.outfile))
-    }, baseUrl)[0] || getBaseUrl('.');
+  function getBaseUrl() {
+    var outDir = path.dirname(path.join(process.cwd(), context.outfile));
+    var requireBaseUrl = context.options.requireConfig && context.options.requireConfig.baseUrl;
+
+    if (requireBaseUrl && grunt.file.isDir(outDir, requireBaseUrl)) {
+      return requireBaseUrl;
+    } else {
+      return outDir;
+    }
   }
   var baseUrl = getBaseUrl();
 
