@@ -112,15 +112,33 @@ exports.process = function(grunt, task, context) {
   var baseUrl = getBaseUrl();
 
   /**
-   * Retrieves the module URL for a require call relative to the specified Base URL.
+   * Retrieves the module URL for a require call relative to the specified Base URL/module.
    */
-  function getRelativeModuleUrl(src) {
-    return path.relative(baseUrl, src).replace(/\.js$/, '');
+  function resolvePackageRoot(baseUrl, pkg) {
+    var root = baseUrl + path.sep;
+    if (pkg.location) root += pkg.location + path.sep;
+    root += pkg.main ? pkg.main : 'main';
+    return path.normalize(root);
   }
 
-  // Remove baseUrl and .js from src files
-  context.scripts.src = grunt.util._.map(context.scripts.src, getRelativeModuleUrl);
+  // Find the root module, if any, in packages
+  var module = false;
+  var packages = context.options.requireConfig.packages || [];
+  packages.forEach(function (pkg) {
+    var root = resolvePackageRoot(baseUrl, pkg);
+    var rootPath = path.dirname(root);
+    if (rootPath === baseUrl) module = pkg;
+  });
 
+  var prefix = module ? (module.name + path.sep) : '';
+  var main = module ? resolvePackageRoot(baseUrl, module) : false;
+  context.scripts.src = grunt.util._.map(context.scripts.src, function(script) {
+    script = path.normalize(script);
+    if (script === main) script = module.name;
+    else script = script.replace(new RegExp('^' + baseUrl + path.sep + "?"), prefix);
+    if (script === prefix + 'main') script = module.name;
+    return script.replace(/\.js$/, '');
+  });
 
   // Prepend loaderPlugins to the appropriate files
   if (context.options.loaderPlugin) {
