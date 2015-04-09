@@ -83,7 +83,7 @@
       <% }) %>
     ],
     function(){
-      require(['<%= [].concat(scripts.specs,scripts.reporters).join("','") %>'], function(){
+      require(['<%= [].concat(scripts.polyfills,scripts.specs,scripts.reporters).join("','") %>'], function(){
         startTests();
       });
     }
