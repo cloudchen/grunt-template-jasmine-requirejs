@@ -30,6 +30,7 @@
       } else {
         message += error.message;
       }
+      message += '\nOriginal stack trace:\n' + error.stack;
 
       throw Error(message);
     };
