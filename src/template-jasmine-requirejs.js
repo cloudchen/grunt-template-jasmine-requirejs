@@ -99,23 +99,25 @@ exports.process = function(grunt, task, context) {
   /**
    * Find and resolve specified baseUrl.
    */
-  function getBaseUrl() {
-    var outDir = path.dirname(path.join(process.cwd(), context.outfile));
-    var requireBaseUrl = context.options.requireConfig && context.options.requireConfig.baseUrl;
+  var outDir = path.dirname(path.join(process.cwd(), context.outfile));
+  var baseDir;
+  var requireBaseUrl = context.options.requireConfig && context.options.requireConfig.baseUrl;
+  var requireBaseDir = requireBaseUrl && path.join(outDir, requireBaseUrl);
 
-    if (requireBaseUrl && grunt.file.isDir(outDir, requireBaseUrl)) {
-      return requireBaseUrl;
-    } else {
-      return outDir;
-    }
+  if (requireBaseDir && grunt.file.isDir(requireBaseDir)) {
+    baseDir = requireBaseDir;
+  } else {
+    baseDir = outDir;
   }
-  var baseUrl = getBaseUrl();
 
   /**
    * Retrieves the module URL for a require call relative to the specified Base URL.
    */
   function getRelativeModuleUrl(src) {
-    return path.relative(baseUrl, src).replace(/\.js$/, '');
+    if (!path.isAbsolute(src)) {
+      src = path.join(outDir, src)
+    }
+    return path.relative(baseDir, src).replace(/\.js$/, '');
   }
 
   // Remove baseUrl and .js from src files
