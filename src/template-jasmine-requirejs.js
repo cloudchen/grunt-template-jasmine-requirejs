@@ -114,8 +114,22 @@ exports.process = function(grunt, task, context) {
   /**
    * Retrieves the module URL for a require call relative to the specified Base URL.
    */
+  var requirePackages = context.options.requireConfig && context.options.requireConfig.packages;
+  var basePackage = grunt.util._.find(requirePackages, function(pkg) {
+    var fullPath = path.join(baseUrl, pkg.location);
+    return path.relative(baseUrl, fullPath) === '';
+  });
+
   function getRelativeModuleUrl(src) {
-    return path.relative(baseUrl, src).replace(/\.js$/, '');
+    var relativePath = path.relative(baseUrl, src).replace(/\.js$/, '');
+    if (basePackage != null && src.indexOf(baseUrl) === 0) {
+      if (relativePath === basePackage.main || relativePath === 'main') {
+        relativePath = basePackage.name;
+      } else {
+        relativePath = [basePackage.name, relativePath].join('/');
+      }
+    }
+    return relativePath;
   }
 
   // Remove baseUrl and .js from src files
