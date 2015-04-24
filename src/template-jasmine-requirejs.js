@@ -115,7 +115,7 @@ exports.process = function(grunt, task, context) {
    */
   function getRelativeModuleUrl(src) {
     if (!path.isAbsolute(src)) {
-      src = path.join(outDir, src)
+      src = path.join(outDir, src);
     }
     return path.relative(baseDir, src).replace(/\.js$/, '');
   }
