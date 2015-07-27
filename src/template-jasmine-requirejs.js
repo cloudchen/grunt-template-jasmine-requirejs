@@ -19,7 +19,16 @@ var template = __dirname + '/templates/jasmine-requirejs.html',
       '2.1.7' : __dirname + '/../vendor/require-2.1.7.js',
       '2.1.8' : __dirname + '/../vendor/require-2.1.8.js',
       '2.1.9' : __dirname + '/../vendor/require-2.1.9.js',
-      '2.1.10' : __dirname + '/../vendor/require-2.1.10.js'
+      '2.1.10' : __dirname + '/../vendor/require-2.1.10.js',
+      '2.1.11' : __dirname + '/../vendor/require-2.1.11.js',
+      '2.1.12' : __dirname + '/../vendor/require-2.1.12.js',
+      '2.1.13' : __dirname + '/../vendor/require-2.1.13.js',
+      '2.1.14' : __dirname + '/../vendor/require-2.1.14.js',
+      '2.1.15' : __dirname + '/../vendor/require-2.1.15.js',
+      '2.1.16' : __dirname + '/../vendor/require-2.1.16.js',
+      '2.1.17' : __dirname + '/../vendor/require-2.1.17.js',
+      '2.1.18' : __dirname + '/../vendor/require-2.1.18.js',
+      '2.1.19' : __dirname + '/../vendor/require-2.1.19.js'
     },
     path = require('path'),
     parse = require('./lib/parse');
@@ -99,23 +108,25 @@ exports.process = function(grunt, task, context) {
   /**
    * Find and resolve specified baseUrl.
    */
-  function getBaseUrl() {
-    var outDir = path.dirname(path.join(process.cwd(), context.outfile));
-    var requireBaseUrl = context.options.requireConfig && context.options.requireConfig.baseUrl;
+  var outDir = path.dirname(path.join(process.cwd(), context.outfile));
+  var baseDir;
+  var requireBaseUrl = context.options.requireConfig && context.options.requireConfig.baseUrl;
+  var requireBaseDir = requireBaseUrl && path.join(outDir, requireBaseUrl);
 
-    if (requireBaseUrl && grunt.file.isDir(outDir, requireBaseUrl)) {
-      return requireBaseUrl;
-    } else {
-      return outDir;
-    }
+  if (requireBaseDir && grunt.file.isDir(requireBaseDir)) {
+    baseDir = requireBaseDir;
+  } else {
+    baseDir = outDir;
   }
-  var baseUrl = getBaseUrl();
 
   /**
    * Retrieves the module URL for a require call relative to the specified Base URL.
    */
   function getRelativeModuleUrl(src) {
-    return path.relative(baseUrl, src).replace(/\.js$/, '');
+    if (!path.isAbsolute(src)) {
+      src = path.join(outDir, src);
+    }
+    return path.relative(baseDir, src).replace(/\.js$/, '');
   }
 
   // Remove baseUrl and .js from src files
