@@ -76,18 +76,22 @@
     window.onload = null;
 
     function launchTest() {
-    require([
-      <% scripts.src.forEach(function(script, i){ %>
-        <% script = script.replace(/\\/g, '/') // replace all backward slashes to forward slash %>
-        '<%= script %>' <%= i < scripts.src.length-1 ? ',' : '' %>
-      <% }) %>
-    ],
-    function(){
+    <% if (options.requireAllSource !== false) { %>
+        require([
+        <% scripts.src.forEach(function(script, i){ %>
+            <% script = script.replace(/\\/g, '/'); // replace all backward slashes to forward slash %>
+            <% if (options.transformSourceRequires) script = options.transformSourceRequires(script); %>
+            '<%= script %>' <%= i < scripts.src.length-1 ? ',' : '' %>
+        <% }) %>
+        ],
+        function(){
+    <% } %>
       require(['<%= [].concat(scripts.specs,scripts.reporters).join("','") %>'], function(){
         startTests();
       });
-    }
-    )
+    <% if (options.requireAllSource !== false) { %>
+    })
+    <% } %>
   }
   </script>
 

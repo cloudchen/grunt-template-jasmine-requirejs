@@ -33,6 +33,17 @@ Options: `2.0.0` to `2.1.10` or path to a local file system version(relative to 
 
 The version of requirejs to use.
 
+### templateOptions.requireAllSource
+Type: `Boolean`
+Default: true
+
+Whether all source files should be required before the tests start.
+
+### templateOptions.transformSourceRequires
+Type: `function`
+
+Optional function that is run on every source require dependency added to the page. Use this to map file-names to module id's if you have mapping involved, but still want to require in all the source.
+
 ### templateOptions.requireConfigFile
 Type `String` or `Array`
 
