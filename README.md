@@ -29,7 +29,7 @@ Works same as original. But they are loaded **after** require.js script file
 
 ### templateOptions.version
 Type: `String`
-Options: `2.0.0` to `2.1.10` or path to a local file system version(relative to Gruntfile.js). Absolute path is allowed as well. Default: latest requirejs version included
+Options: `2.0.0` to `2.1.19` or path to a local file system version(relative to Gruntfile.js). Absolute path is allowed as well. Default: latest requirejs version included
 
 The version of requirejs to use.
 

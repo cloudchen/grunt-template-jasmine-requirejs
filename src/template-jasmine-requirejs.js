@@ -19,7 +19,16 @@ var template = __dirname + '/templates/jasmine-requirejs.html',
       '2.1.7' : __dirname + '/../vendor/require-2.1.7.js',
       '2.1.8' : __dirname + '/../vendor/require-2.1.8.js',
       '2.1.9' : __dirname + '/../vendor/require-2.1.9.js',
-      '2.1.10' : __dirname + '/../vendor/require-2.1.10.js'
+      '2.1.10' : __dirname + '/../vendor/require-2.1.10.js',
+      '2.1.11' : __dirname + '/../vendor/require-2.1.11.js',
+      '2.1.12' : __dirname + '/../vendor/require-2.1.12.js',
+      '2.1.13' : __dirname + '/../vendor/require-2.1.13.js',
+      '2.1.14' : __dirname + '/../vendor/require-2.1.14.js',
+      '2.1.15' : __dirname + '/../vendor/require-2.1.15.js',
+      '2.1.16' : __dirname + '/../vendor/require-2.1.16.js',
+      '2.1.17' : __dirname + '/../vendor/require-2.1.17.js',
+      '2.1.18' : __dirname + '/../vendor/require-2.1.18.js',
+      '2.1.19' : __dirname + '/../vendor/require-2.1.19.js'
     },
     path = require('path'),
     parse = require('./lib/parse');
