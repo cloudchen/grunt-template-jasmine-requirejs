@@ -7,6 +7,12 @@
   <% css.forEach(function(style){ %>
   <link rel="stylesheet" type="text/css" href="<%= style %>">
   <% }) %>
+  
+  <% with (scripts) { %>
+  <% [].concat(polyfills).forEach(function(script){ %>
+  <script src="<%= script %>"></script>
+  <% }) %>
+  <% }; %>
 
   <% with (scripts) { %>
   <% [].concat(vendor).forEach(function(script){ %>
