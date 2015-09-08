@@ -14,16 +14,16 @@
   <% }) %>
   <% }; %>
 
-  <% with (scripts) { %>
-  <% [].concat(vendor).forEach(function(script){ %>
-  <script src="<%= script %>"></script>
-  <% }) %>
-  <% }; %>
-
   <script src="<%= temp ? temp + "/" : temp %>require.js"></script>
 
   <% with (scripts) { %>
   <% [].concat(jasmine, boot, helpers).forEach(function(script){ %>
+  <script src="<%= script %>"></script>
+  <% }) %>
+  <% }; %>
+
+  <% with (scripts) { %>
+  <% [].concat(vendor).forEach(function(script){ %>
   <script src="<%= script %>"></script>
   <% }) %>
   <% }; %>
