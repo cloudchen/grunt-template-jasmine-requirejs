@@ -65,7 +65,9 @@ function moveRequireJs(grunt, task, versionOrPath) {
 
 exports.process = function(grunt, task, context) {
 
-  var version = context.options.version;
+  var version = context.options.version,
+      // Support Lodash pre-v3 and post-v3
+      contains = grunt.util._.contains || grunt.util._.includes;
 
   // find the latest version if none given
   if (!version) {
@@ -84,7 +86,7 @@ exports.process = function(grunt, task, context) {
       return path.normalize(configFile);
     });
     context.scripts.src = grunt.util._.reject(context.scripts.src, function (script) {
-      return grunt.util._.contains(normalizedPaths, path.normalize(script));
+      return contains(normalizedPaths, path.normalize(script));
     });
 
     var configFromFiles = {};
@@ -173,5 +175,5 @@ exports.process = function(grunt, task, context) {
                                context.temp);
 
   var source = grunt.file.read(template);
-  return grunt.util._.template(source, context);
+  return grunt.util._.template(source)(context);
 };
