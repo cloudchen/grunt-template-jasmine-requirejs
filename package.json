@@ -1,6 +1,6 @@
 {
   "name": "grunt-template-jasmine-requirejs",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Requirejs template for grunt-contrib-jasmine",
   "main": "src/template-jasmine-requirejs.js",
   "scripts": {
@@ -37,7 +37,8 @@
     "Ben Livermore <benjamin.livermore@cengage.com>",
     "Ghn <ghugon@gmail.com>",
     "E.J. Dyksen <ej@dyksen.net>",
-    "Brian Ng <bng@prospricing.com>"
+    "Brian Ng <bng@prospricing.com>",
+    "Radu Micu <radu.micu@gmail.com>"
   ],
   "license": "BSD",
   "devDependencies": {
