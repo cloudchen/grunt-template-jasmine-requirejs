@@ -41,12 +41,15 @@
   ],
   "license": "BSD",
   "devDependencies": {
-    "grunt-contrib-jshint": "~0.6.4",
-    "grunt-contrib-watch": "~0.1.4",
-    "grunt": "~0.4.1",
-    "grunt-contrib-jasmine": "~0.6",
-    "grunt-contrib-connect": "~0.2.0",
-    "grunt-bump": "0.0.13",
+    "grunt-contrib-jshint": "~2.0.0",
+    "grunt-contrib-watch": "~1.1.0",
+    "grunt": "~1.0.3",
+    "grunt-contrib-jasmine": "~2.0.2",
+    "grunt-contrib-connect": "~2.0.0",
+    "grunt-bump": "0.8.0",
     "grunt-npm": "0.0.2"
+  },
+  "dependencies": {
+    "lodash": "~4.17.11"
   }
 }
