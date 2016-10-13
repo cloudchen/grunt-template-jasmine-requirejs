@@ -173,5 +173,7 @@ exports.process = function(grunt, task, context) {
                                context.temp);
 
   var source = grunt.file.read(template);
-  return grunt.util._.template(source, context);
+  var templateFunc =grunt.util._.template(source);
+  return templateFunc(context);
+
 };
