@@ -121,6 +121,13 @@ exports.process = function(grunt, task, context) {
   // Remove baseUrl and .js from src files
   context.scripts.src = grunt.util._.map(context.scripts.src, getRelativeModuleUrl);
 
+  // Reset temp value depending on jasmine sources:
+  if (context.scripts.jasmine.length > 0) {
+    var tempPrefix = context.scripts.jasmine[0].match(/^(.*)\.grunt/);
+    if (tempPrefix && tempPrefix.length === 2) {
+      context.temp = context.temp.replace(/\.grunt/, tempPrefix[1] + '.grunt');
+    }
+  }
 
   // Prepend loaderPlugins to the appropriate files
   if (context.options.loaderPlugin) {
