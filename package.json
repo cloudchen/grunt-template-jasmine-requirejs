@@ -1,6 +1,6 @@
 {
   "name": "grunt-template-jasmine-requirejs",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Requirejs template for grunt-contrib-jasmine",
   "main": "src/template-jasmine-requirejs.js",
   "scripts": {
@@ -42,10 +42,10 @@
   ],
   "license": "BSD-2-Clause",
   "devDependencies": {
-    "grunt-contrib-jshint": "~1.0.0",
+    "grunt-contrib-jshint": "~1.1.0",
     "grunt-contrib-watch": "~1.0.0",
     "grunt": "~1.0.1",
-    "grunt-contrib-jasmine": "~1.0.3",
+    "grunt-contrib-jasmine": "~1.1.0",
     "grunt-contrib-connect": "~1.0.2",
     "grunt-bump": "0.8.0",
     "grunt-npm": "0.0.2"
