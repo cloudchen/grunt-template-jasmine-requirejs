@@ -47,7 +47,7 @@ function resolvePath(filepath) {
   return path.resolve(filepath);
 }
 
-function moveRequireJs(grunt, task, versionOrPath) {
+function moveRequireJs(grunt, task, versionOrPath, tempDir) {
   var pathToRequireJS,
       versionReg = /^(\d\.?)*$/;
 
@@ -63,7 +63,8 @@ function moveRequireJs(grunt, task, versionOrPath) {
         throw new Error('local file path of requirejs [' + versionOrPath + '] was not found');
       }
   }
-  task.copyTempFile(pathToRequireJS,'require.js');
+
+  task.copyTempFile(pathToRequireJS, path.join(tempDir, 'require.js'));
 }
 
 exports.process = function(grunt, task, context) {
@@ -136,7 +137,7 @@ exports.process = function(grunt, task, context) {
     });
   }
 
-  moveRequireJs(grunt, task, version);
+  moveRequireJs(grunt, task, version, context.temp);
 
   context.serializeRequireConfig = function(requireConfig) {
     var funcCounter = 0;
