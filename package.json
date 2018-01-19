@@ -59,5 +59,8 @@
   "bugs": {
     "url": "https://github.com/radum/grunt-template-jasmine-requirejs/issues"
   },
-  "homepage": "https://github.com/radum/grunt-template-jasmine-requirejs#readme"
+  "homepage": "https://github.com/radum/grunt-template-jasmine-requirejs#readme",
+  "publishConfig": {
+    "access": "public"
+  }
 }
