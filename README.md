@@ -261,5 +261,7 @@ This automation can help to avoid unexpected dependency order issue
 
 ### Authors / Maintainers
 
+- RaduM (@radumicu) - Upgraded to work with Grunt v1, apart from that there is no other work done.
+
 - Jarrod Overson (@jsoverson)
 - Cloud Chen (@cloudchen)
