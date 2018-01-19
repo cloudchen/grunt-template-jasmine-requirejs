@@ -22,7 +22,8 @@ var template = __dirname + '/templates/jasmine-requirejs.html',
       '2.1.9' : __dirname + '/../vendor/require-2.1.9.js',
       '2.1.10' : __dirname + '/../vendor/require-2.1.10.js',
       '2.2.0' : __dirname + '/../vendor/require-2.2.0.js',
-      '2.3.3' : __dirname + '/../vendor/require-2.3.3.js'
+      '2.3.3' : __dirname + '/../vendor/require-2.3.3.js',
+	  '2.3.5' : __dirname + '/../vendor/require-2.3.5.js'
     },
     path = require('path'),
     parse = require('./lib/parse');
@@ -172,7 +173,7 @@ exports.process = function(grunt, task, context) {
     return jsonString;
   };
 
-  // update relative path of .grunt folder to the location of spec runner
+  // Update relative path of .grunt folder to the location of spec runner
   context.temp = path.relative(path.dirname(context.outfile),
                                context.temp);
 
