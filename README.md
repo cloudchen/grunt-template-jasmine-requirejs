@@ -1,4 +1,4 @@
-RequireJS template for Jasmine unit tests [![Build Status](https://travis-ci.org/cloudchen/grunt-template-jasmine-requirejs.png?branch=master)](https://travis-ci.org/cloudchen/grunt-template-jasmine-requirejs)
+RequireJS template for Jasmine unit tests [![Build Status](https://travis-ci.org/radum/grunt-template-jasmine-requirejs.png?branch=master)](https://travis-ci.org/radum/grunt-template-jasmine-requirejs)
 -----------------------------------------
 
 ## Installation
@@ -247,6 +247,11 @@ var require = {
 This automation can help to avoid unexpected dependency order issue
 
 ## Change Log
+
+* v0.4.1 Clean template html code
+* v0.4.0 Upgrade RequireJs to 2.3.5
+* v0.3.1 Upgrade RequireJs to 2.3.3
+* v0.3.0 Upgrade to Grunt 1.0
 * v0.2.3 Fixed path issues [#77](https://github.com/cloudchen/grunt-template-jasmine-requirejs/pull/77)
 * v0.2.2 Fixed regression which casued by [#65](https://github.com/cloudchen/grunt-template-jasmine-requirejs/pull/65)
 * v0.2.1 Fixed [#65](https://github.com/cloudchen/grunt-template-jasmine-requirejs/pull/65)
@@ -255,6 +260,8 @@ This automation can help to avoid unexpected dependency order issue
 * v0.1.9, 02.04.14, [#57](https://github.com/cloudchen/grunt-template-jasmine-requirejs/issues/57) prevents conflict with `grunt-contrib-jasmine` 0.6.x, added requirejs 2.1.9 & 2.1.10
 
 ### Authors / Maintainers
+
+- RaduM (@radumicu) - Upgraded to work with Grunt v1, apart from that there is no other work done.
 
 - Jarrod Overson (@jsoverson)
 - Cloud Chen (@cloudchen)

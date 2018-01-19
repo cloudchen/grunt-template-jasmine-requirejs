@@ -1,5 +1,6 @@
 "use strict";
 
+var _ = require('lodash');
 var template = __dirname + '/templates/jasmine-requirejs.html',
     requirejs  = {
       '2.0.0' : __dirname + '/../vendor/require-2.0.0.js',
@@ -19,7 +20,10 @@ var template = __dirname + '/templates/jasmine-requirejs.html',
       '2.1.7' : __dirname + '/../vendor/require-2.1.7.js',
       '2.1.8' : __dirname + '/../vendor/require-2.1.8.js',
       '2.1.9' : __dirname + '/../vendor/require-2.1.9.js',
-      '2.1.10' : __dirname + '/../vendor/require-2.1.10.js'
+      '2.1.10' : __dirname + '/../vendor/require-2.1.10.js',
+      '2.2.0' : __dirname + '/../vendor/require-2.2.0.js',
+      '2.3.3' : __dirname + '/../vendor/require-2.3.3.js',
+	  '2.3.5' : __dirname + '/../vendor/require-2.3.5.js'
     },
     path = require('path'),
     parse = require('./lib/parse');
@@ -44,7 +48,7 @@ function resolvePath(filepath) {
   return path.resolve(filepath);
 }
 
-function moveRequireJs(grunt, task, versionOrPath) {
+function moveRequireJs(grunt, task, versionOrPath, tempDir) {
   var pathToRequireJS,
       versionReg = /^(\d\.?)*$/;
 
@@ -60,7 +64,8 @@ function moveRequireJs(grunt, task, versionOrPath) {
         throw new Error('local file path of requirejs [' + versionOrPath + '] was not found');
       }
   }
-  task.copyTempFile(pathToRequireJS,'require.js');
+
+  task.copyTempFile(pathToRequireJS, path.join(tempDir, 'require.js'));
 }
 
 exports.process = function(grunt, task, context) {
@@ -78,21 +83,21 @@ exports.process = function(grunt, task, context) {
   // Extract config from main require config file
   if (context.options.requireConfigFile) {
     // Remove mainConfigFile from src files
-    var requireConfigFiles = grunt.util._.flatten([context.options.requireConfigFile]);
+    var requireConfigFiles = _.flatten([context.options.requireConfigFile]);
 
-    var normalizedPaths = grunt.util._.map(requireConfigFiles, function(configFile){
+    var normalizedPaths = _.map(requireConfigFiles, function(configFile){
       return path.normalize(configFile);
     });
-    context.scripts.src = grunt.util._.reject(context.scripts.src, function (script) {
-      return grunt.util._.contains(normalizedPaths, path.normalize(script));
+    context.scripts.src = _.reject(context.scripts.src, function (script) {
+      return _.includes(normalizedPaths, path.normalize(script));
     });
 
     var configFromFiles = {};
-    grunt.util._.map(requireConfigFiles, function (configFile) {
-      grunt.util._.merge(configFromFiles, parse.findConfig(grunt.file.read(configFile)).config);
+    _.map(requireConfigFiles, function (configFile) {
+      _.merge(configFromFiles, parse.findConfig(grunt.file.read(configFile)).config);
     });
 
-    context.options.requireConfig = grunt.util._.merge(configFromFiles, context.options.requireConfig);
+    context.options.requireConfig = _.merge(configFromFiles, context.options.requireConfig);
   }
 
 
@@ -119,7 +124,7 @@ exports.process = function(grunt, task, context) {
   }
 
   // Remove baseUrl and .js from src files
-  context.scripts.src = grunt.util._.map(context.scripts.src, getRelativeModuleUrl);
+  context.scripts.src = _.map(context.scripts.src, getRelativeModuleUrl);
 
 
   // Prepend loaderPlugins to the appropriate files
@@ -133,7 +138,7 @@ exports.process = function(grunt, task, context) {
     });
   }
 
-  moveRequireJs(grunt, task, version);
+  moveRequireJs(grunt, task, version, context.temp);
 
   context.serializeRequireConfig = function(requireConfig) {
     var funcCounter = 0;
@@ -168,10 +173,12 @@ exports.process = function(grunt, task, context) {
     return jsonString;
   };
 
-  // update relative path of .grunt folder to the location of spec runner
+  // Update relative path of .grunt folder to the location of spec runner
   context.temp = path.relative(path.dirname(context.outfile),
                                context.temp);
 
   var source = grunt.file.read(template);
-  return grunt.util._.template(source, context);
+  var tpl = _.template(source);
+
+  return tpl(context);
 };

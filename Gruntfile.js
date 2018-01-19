@@ -95,7 +95,7 @@ module.exports = function(grunt) {
           helpers: 'test/fixtures/requirejs/spec/*Helper.js',
           host: 'http://127.0.0.1:<%= connect.test.port %>/',
           template: require('./'),
-          templateOptions: grunt.util._.extend({version: "vendor/require-2.1.8.js"}, defaultTemplateOptions)
+          templateOptions: grunt.util._.extend({version: "vendor/require-2.3.3.js"}, defaultTemplateOptions)
         }
       },
       parse_test: {
