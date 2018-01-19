@@ -247,6 +247,9 @@ var require = {
 This automation can help to avoid unexpected dependency order issue
 
 ## Change Log
+
+* v0.4.1 Clean template html code
+* v0.4.0 Upgrade RequireJs to 2.3.5
 * v0.3.1 Upgrade RequireJs to 2.3.3
 * v0.3.0 Upgrade to Grunt 1.0
 * v0.2.3 Fixed path issues [#77](https://github.com/cloudchen/grunt-template-jasmine-requirejs/pull/77)
