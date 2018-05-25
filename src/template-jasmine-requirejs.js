@@ -171,7 +171,9 @@ exports.process = function(grunt, task, context) {
   // update relative path of .grunt folder to the location of spec runner
   context.temp = path.relative(path.dirname(context.outfile),
                                context.temp);
-
+  if (context.options.specRunnerTemplate && grunt.file.exists(context.options.specRunnerTemplate)) {
+      template = context.options.specRunnerTemplate;
+  }
   var source = grunt.file.read(template);
   return grunt.util._.template(source, context);
 };
