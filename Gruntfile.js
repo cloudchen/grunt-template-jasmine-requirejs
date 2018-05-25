@@ -143,6 +143,19 @@ module.exports = function(grunt) {
           }
         }
       },
+      'require-outfile-same-dir': {
+        src: 'test/fixtures/require-baseurl/src/**/*.js',
+        options: {
+          outfile: ".grunt/grunt-contrib-jasmine/_SpecRunner.html",
+          specs: 'test/fixtures/require-baseurl/spec/**/*Spec.js',
+          template: require('./'),
+          templateOptions: {
+            requireConfig: {
+              baseUrl: '../../test/fixtures/require-baseurl/src/'
+            }
+          }
+        }
+      },
     },
     bump: {
       options: {
