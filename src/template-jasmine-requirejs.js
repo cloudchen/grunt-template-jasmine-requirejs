@@ -60,7 +60,7 @@ function moveRequireJs(grunt, task, versionOrPath) {
         throw new Error('local file path of requirejs [' + versionOrPath + '] was not found');
       }
   }
-  task.copyTempFile(pathToRequireJS,'require.js');
+  task.copyTempFile(pathToRequireJS,'.grunt/grunt-contrib-jasmine/require.js');
 }
 
 exports.process = function(grunt, task, context) {
